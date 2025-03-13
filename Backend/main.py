@@ -1,48 +1,51 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user
-from models import db, User
+from extensions import db, mail
+from models import User
 
 app = Flask(__name__)
+app.config.from_object('config.Config')
 
-# Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///leveling.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = "supersecretkey"
-
-# Initialize SQLAlchemy
+# ✅ Initialize Extensions
 db.init_app(app)
-
-# Flask-Login Setup
+mail.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "auth.login"
 
+# ✅ Add This Function Below
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Register Blueprints
+# ✅ Import Blueprints
 from routes.auth import auth
 app.register_blueprint(auth, url_prefix='/auth')
 
-# Home Route
+@app.route('/users')
+@login_required
+def view_users():
+    # ✅ Only Allow Admins to Access
+    if not current_user.is_admin:
+        flash('You do not have permission to access this page.', 'error')
+        return redirect(url_for('dashboard'))  # Redirect normal users away
+
+    users = User.query.all()  # Get all users from the database
+    return render_template('users.html', users=users)
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
 
-# Dashboard Route
+# ✅ Define Dashboard Route
 @app.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html', user=current_user)
 
-# Error Handling for 404 Pages
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
-
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()  # ✅ Ensures tables are created before running
+        db.create_all()
     app.run(debug=True, port=5001)
