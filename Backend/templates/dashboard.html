@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h2>Welcome, <span class="highlight">{{ user.username }}</span>! 🎉</h2>
+        <p>Your journey to level up starts now.</p>
+
+        <div class="stats">
+            <h3>Your Stats</h3>
+            <ul>
+                <li>📊 XP: 1200</li>
+                <li>🔥 Streak: 7 days</li>
+                <li>🏆 Rank: <strong>Level A</strong></li>
+            </ul>
+        </div>
+
+        <div class="dashboard-actions">
+            <a href="{{ url_for('auth.logout') }}" class="btn logout">Logout</a>
+        </div>
+    </div>
+
+</body>
+</html>

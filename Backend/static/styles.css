@@ -1,86 +1,303 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
 /* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #1c1b29;
+    background: linear-gradient(135deg, #141e30, #243b55);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
     margin: 0;
+    text-align: center;
 }
 
-/* Centering the Form */
+/* Centering the Content */
 .container {
-    width: 350px;
-    padding: 20px;
-    background: #252436;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 380px;
+    padding: 30px;
+    background: rgba(37, 36, 54, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     text-align: center;
     position: relative;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Floating Effect */
+.container:hover {
+    transform: scale(1.03);
 }
 
 /* Titles */
-h2 {
+h1 {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+h1 .highlight {
     color: #00aaff;
-    font-size: 24px;
-    text-align: center;
+    font-weight: 700;
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: 18px;
+    font-weight: 300;
     margin-bottom: 20px;
 }
 
 /* Input Fields */
 input {
-    width: 75%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #555;
-    border-radius: 5px;
-    background: #333;
+    width: 90%;
+    padding: 12px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
     font-size: 16px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Input Glow Effect */
+input:focus {
+    outline: none;
+    box-shadow: 0 0 10px #00aaff;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 /* Buttons */
-button {
-    width: 50%;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: #00aaff;
+button, .btn {
+    display: inline-block;
+    width: 90%;
+    padding: 12px;
+    margin-top: 15px;
+    background: linear-gradient(135deg, #00aaff, #007acc);
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     color: white;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 170, 255, 0.5);
 }
 
-button:hover {
-    background-color: #007acc;
+button:hover, .btn:hover {
+    background: linear-gradient(135deg, #007acc, #005f99);
+    box-shadow: 0 6px 15px rgba(0, 170, 255, 0.7);
+    transform: scale(1.05);
+}
+
+/* Different Button Styles */
+.btn.logout {
+    background: #ff4444;
+}
+
+.btn.logout:hover {
+    background: #d32f2f;
+}
+
+/* Different Button Styles */
+.btn.register {
+    background: #ff5722;
+}
+
+.btn.register:hover {
+    background: #e64a19;
+}
+
+.btn.logout {
+    background: #ff4444;
+}
+
+.btn.logout:hover {
+    background: #d32f2f;
 }
 
 /* Links */
+.redirect-text {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
 a {
     color: #00aaff;
     text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
 }
 
 a:hover {
     text-decoration: underline;
+    color: #007acc;
 }
 
 /* Flash Messages */
 .flash-messages {
     background: #ff4444;
     color: white;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+/* Success, Info, Error Messages */
+.success {
+    background: #28a745;
+    padding: 10px;
     border-radius: 5px;
 }
 
-/* Fix floating login text */
-.login-text {
-    text-align: center;
-    font-size: 14px;
+.info {
+    background: #17a2b8;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.error {
+    background: #ff4444;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Forgot Password */
+.info-text {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.back-link {
     margin-top: 15px;
+    font-size: 14px;
+}
+
+.back-link a {
+    color: #00aaff;
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+    color: #007acc;
+}
+
+/* Home Page */
+.home-container {
+    width: 90%;
+    max-width: 600px;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Home Page Buttons */
+.home-buttons {
+    margin-top: 20px;
+}
+
+.home-buttons a {
+    display: inline-block;
+    width: 48%;
+    padding: 12px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Dashboard */
+.dashboard-container {
+    width: 90%;
+    max-width: 600px;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-container h2 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.dashboard-container .highlight {
+    color: #00aaff;
+    font-weight: bold;
+}
+
+.stats {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.stats h3 {
+    color: #00aaff;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.stats ul {
+    list-style: none;
+    padding: 0;
+}
+
+.stats ul li {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+/* Dashboard Actions */
+.dashboard-actions {
+    margin-top: 20px;
+}
+
+.dashboard-actions .btn {
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 16px;
+}
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container:hover {
+    animation: glowing 1.5s infinite alternate;
+}
+
+@keyframes glowing {
+    0% { box-shadow: 0 0 10px #00aaff; }
+    50% { box-shadow: 0 0 20px #00aaff; }
+    100% { box-shadow: 0 0 10px #00aaff; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container, .home-container, .dashboard-container {
+        width: 90%;
+    }
 }
