@@ -1,4 +1,4 @@
-from main import app, db  # Import from main.py instead of app.py
+from main import app, db  
 
 with app.app_context():
     db.create_all()

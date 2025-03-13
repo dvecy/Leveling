@@ -1,4 +1,4 @@
-#!/Users/sadatnazarli/Desktop/Leveling/Backend/venv/bin/python3
+#!/Users/sadatnazarli/Desktop/Leveling/Backend/venv/bin/python3.11
 # -*- coding: utf-8 -*-
 import re
 import sys
