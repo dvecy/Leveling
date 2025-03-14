@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - CyberLevel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="profile-container">
+    <h1>Profile Settings</h1>
+    <form method="POST" action="{{ url_for('auth.profile') }}" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      
+      <div class="form-group">
+        <label for="photo">Profile Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
+      </div>
+      
+      <button type="submit" class="cyber-button">Update Profile</button>
+    </form>
+  </div>
+</body>
+</html>
