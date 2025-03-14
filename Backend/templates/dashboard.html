@@ -2,79 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>CyberLevel - Dashboard</title>
+  
   <!-- Optional external animate.css (for additional animations) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <!-- Canvas-confetti for level-up effects -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.5.1/confetti.browser.min.js"></script>
+  
+  <!-- Google Font: Orbitron (for a futuristic look) -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  
   <style>
-    /* ===================================================================
-       Reset & Base Styles
-    ==================================================================== */
+    /****************************************************************
+     1) RESET & BASE
+    ****************************************************************/
     *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    body {
+    html, body {
       font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(135deg, #0d0d1a, #1a1a33);
-      color: #e6e6ff;
       min-height: 100vh;
-      overflow-x: hidden;
       line-height: 1.5;
+      background: #0d0d1a; /* fallback */
+      color: #e6e6ff;
+    }
+    /* Smooth scrolling for anchors (optional) */
+    html {
+      scroll-behavior: smooth;
     }
     
-    /* ===================================================================
-       Cyber Grid Background (Overlay)
-    ==================================================================== */
+    /****************************************************************
+     2) BACKGROUND GRIDS & EFFECTS
+    ****************************************************************/
+    body {
+      /* A layered neon gradient background */
+      background: radial-gradient(circle at 20% 20%, rgba(255,0,150,0.1), transparent 40%),
+                  radial-gradient(circle at 80% 80%, rgba(0,255,255,0.1), transparent 40%),
+                  linear-gradient(135deg, #0d0d1a 0%, #1a1a33 100%);
+      overflow-x: hidden;
+    }
     .cyber-grid {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
-      background-size: 20px 20px;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
       z-index: -1;
+      /* Subtle cyber grid overlay */
+      background-image:
+        linear-gradient(rgba(0, 243, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.07) 1px, transparent 1px);
+      background-size: 25px 25px;
     }
     
-    /* ===================================================================
-       Root Variables for Cyber Theme
-    ==================================================================== */
+    /****************************************************************
+     3) COLOR & THEME VARIABLES
+    ****************************************************************/
     :root {
       --cyber-blue: #00f3ff;
       --neon-purple: #bc13fe;
       --dark-bg: #0d0a12;
       --container-bg: rgba(0, 0, 0, 0.85);
       --border-color: #00f3ff;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      --shadow: 0 0 40px rgba(0, 255, 255, 0.15);
+      --text-primary: #e6e6ff;
+      --danger-red: #ff4444;
     }
     
-    /* ===================================================================
-       Dashboard Wrapper & Container
-    ==================================================================== */
+    /****************************************************************
+     4) LAYOUT WRAPPER & CONTAINER
+    ****************************************************************/
     .dashboard-wrapper {
-      max-width: 1200px;
-      margin: 2rem auto;
+      max-width: 1300px;
+      margin: 3rem auto;
       padding: 20px;
       position: relative;
     }
     .dashboard-container {
       background: var(--container-bg);
+      border: 1px solid rgba(0, 243, 255, 0.2);
       border-radius: 10px;
       box-shadow: var(--shadow);
       padding: 2rem;
-      animation: fadeIn 1s ease-out;
+      animation: fadeIn 1.2s ease-out;
+      position: relative;
+      overflow: hidden;
     }
     
-    /* ===================================================================
-       Dashboard Header & User Profile
-    ==================================================================== */
+    /****************************************************************
+     5) HEADER / USER PROFILE
+    ****************************************************************/
     .dashboard-header {
       display: flex;
       justify-content: space-between;
@@ -92,45 +111,59 @@
       gap: 1rem;
     }
     .user-avatar {
-      width: 80px;
-      height: 80px;
+      width: 80px; height: 80px;
       border-radius: 50%;
       border: 3px solid var(--cyber-blue);
-      box-shadow: 0 0 10px var(--cyber-blue);
+      box-shadow: 0 0 15px var(--cyber-blue);
       object-fit: cover;
     }
     .dashboard-header h1 {
       font-size: 2rem;
       color: var(--cyber-blue);
+      text-shadow: 0 0 8px var(--cyber-blue);
     }
     .dashboard-header p {
       font-size: 1rem;
-      color: #e6e6ff;
+      color: var(--text-primary);
     }
     
-    /* ===================================================================
-       Cyber Button Styles
-    ==================================================================== */
-    .cyber-button {
+    /****************************************************************
+     6) CYBER BUTTON STYLES
+    ****************************************************************/
+    .cyber-button, .btn {
       background: linear-gradient(45deg, var(--cyber-blue), var(--neon-purple));
       border: none;
       border-radius: 5px;
       color: #fff;
-      padding: 0.5rem 1rem;
+      padding: 0.65rem 1rem;
       cursor: pointer;
       text-transform: uppercase;
-      font-weight: bold;
+      font-weight: 600;
       letter-spacing: 1px;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
-    .cyber-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 10px var(--cyber-blue);
+    .cyber-button::before, .btn::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 0%; height: 100%;
+      background: rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+      z-index: 1;
+    }
+    .cyber-button:hover::before, .btn:hover::before {
+      width: 100%;
+    }
+    .cyber-button:hover, .btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 0 15px var(--cyber-blue);
     }
     
-    /* ===================================================================
-       Stats Grid & Progress Bar
-    ==================================================================== */
+    /****************************************************************
+     7) STATS GRID & XP PROGRESS
+    ****************************************************************/
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -143,39 +176,45 @@
       border-radius: 10px;
       border: 1px solid var(--border-color);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .stat-card::before {
+      /* Decorative neon border accent */
+      content: "";
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border: 2px dashed var(--neon-purple);
+      opacity: 0.1;
+      pointer-events: none;
+      border-radius: inherit;
     }
     .stat-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 0 10px var(--cyber-blue);
+      box-shadow: 0 0 20px var(--cyber-blue);
     }
     .stat-card h3 {
       font-size: 1.5rem;
       color: var(--neon-purple);
       margin-bottom: 0.5rem;
+      text-shadow: 0 0 8px var(--neon-purple);
     }
     .xp-progress {
-      height: 20px;
+      height: 24px;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
       margin: 10px 0;
     }
     .xp-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--cyber-blue), var(--neon-purple));
-      /* Width will be updated dynamically */
       width: {{ xp_percentage }}%;
       transition: width 0.5s ease;
     }
     
-    /* Button to simulate adding XP */
-    #addXpBtn {
-      margin-top: 10px;
-    }
-    
-    /* ===================================================================
-       Tasks Section & Task List
-    ==================================================================== */
+    /****************************************************************
+     8) TASKS SECTION
+    ****************************************************************/
     .tasks-section {
       margin-top: 2rem;
     }
@@ -184,6 +223,7 @@
       margin-bottom: 1rem;
       text-align: center;
       color: var(--cyber-blue);
+      text-shadow: 0 0 8px var(--cyber-blue);
     }
     .task-form {
       display: flex;
@@ -219,39 +259,31 @@
       background: rgba(255, 255, 255, 0.03);
       border-radius: 8px;
       border-left: 4px solid var(--cyber-blue);
-      transition: background 0.3s, border-color 0.3s, transform 0.5s ease;
+      transition: background 0.3s, border-color 0.3s;
+      position: relative;
     }
     .task-item:hover {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.07);
     }
     .task-item.completed {
       opacity: 0.6;
       border-left-color: var(--neon-purple);
       text-decoration: line-through;
     }
-    /* Slide animation classes for tasks */
-    .slide-up {
-      transform: translateY(-100%);
-      opacity: 0;
-    }
-    .slide-down {
-      transform: translateY(100%);
-      opacity: 0;
-    }
     .task-desc {
       flex-grow: 1;
       font-size: 1.1rem;
-      text-align: left;
       padding-right: 10px;
+      text-align: left;
     }
     .task-actions {
       display: flex;
       gap: 0.5rem;
     }
     
-    /* ===================================================================
-       Reward & Penalty Section
-    ==================================================================== */
+    /****************************************************************
+     9) REWARD & PENALTY
+    ****************************************************************/
     .reward-penalty {
       display: flex;
       flex-wrap: wrap;
@@ -267,37 +299,30 @@
       flex: 1;
       min-width: 250px;
       text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .reward:hover, .penalty:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px var(--neon-purple);
     }
     .reward h3, .penalty h3 {
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
       color: var(--neon-purple);
+      text-shadow: 0 0 8px var(--neon-purple);
     }
     .reward p, .penalty p {
       font-size: 1.2rem;
+      color: #fff;
     }
     
-    /* ===================================================================
-       Footer
-    ==================================================================== */
+    /****************************************************************
+     10) FOOTER
+    ****************************************************************/
     footer {
       margin-top: 2rem;
       text-align: center;
-    }
-    footer .btn {
-      background: #ff4444;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.3s, transform 0.3s;
-    }
-    footer .btn:hover {
-      background: #d32f2f;
-      transform: scale(1.05);
     }
     .back-link {
       margin-top: 1rem;
@@ -313,28 +338,27 @@
       text-decoration: underline;
     }
     
-    /* ===================================================================
-       Animations
-    ==================================================================== */
+    /****************************************************************
+     11) ANIMATIONS
+    ****************************************************************/
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     
-    /* Glowing effect for level-up */
+    /* Glow effect on level-up */
     .level-up {
       animation: glow 1s ease-in-out;
     }
-    
     @keyframes glow {
-      0% { text-shadow: 0 0 10px var(--neon-purple); }
-      50% { text-shadow: 0 0 30px var(--neon-purple); }
+      0%   { text-shadow: 0 0 10px var(--neon-purple); }
+      50%  { text-shadow: 0 0 30px var(--neon-purple); }
       100% { text-shadow: 0 0 10px var(--neon-purple); }
     }
     
-    /* ===================================================================
-       Responsive Design
-    ==================================================================== */
+    /****************************************************************
+     12) RESPONSIVE DESIGN
+    ****************************************************************/
     @media (max-width: 768px) {
       .dashboard-header {
         flex-direction: column;
@@ -359,6 +383,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="dashboard-wrapper">
     <div class="cyber-grid"></div>
@@ -369,7 +394,6 @@
           <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" class="user-avatar" alt="User Avatar">
           <div>
             <h1 id="usernameDisplay">{{ user.username }}</h1>
-            <!-- Display active level -->
             <p id="levelDisplay">Active Level: {{ current_level }} Cyber Agent</p>
           </div>
         </div>
@@ -386,9 +410,7 @@
           <div class="xp-progress">
             <div class="xp-fill" id="xpFill" style="width: {{ xp_percentage }}%;"></div>
           </div>
-          <!-- Display XP numerically. The threshold is computed dynamically on the client side. -->
           <p id="xpText">{{ profile.xp }} / {{ next_level_xp }} XP</p>
-          <!-- Button to simulate adding XP -->
           <button class="cyber-button" id="addXpBtn">+50 XP</button>
         </div>
         <div class="stat-card">
@@ -449,24 +471,24 @@
   </div>
   
   <script>
+    // Example JavaScript for XP system, tasks, etc.
     document.addEventListener('DOMContentLoaded', function() {
-      const taskForm = document.getElementById('task-form');
-      const taskList = document.getElementById('task-list');
       const xpFill = document.getElementById('xpFill');
       const xpText = document.getElementById('xpText');
       const levelDisplay = document.getElementById('levelDisplay');
+      const addXpBtn = document.getElementById('addXpBtn');
+      const taskForm = document.getElementById('task-form');
+      const taskList = document.getElementById('task-list');
       
-      // --- XP System Variables ---
-      // These values are passed from the server.
+      // Initialize from server variables
       let currentXP = {{ profile.xp }};
       let currentLevel = {{ current_level }};
       
-      // Helper: Calculate threshold (XP required for current level)
+      // Helper to get threshold for a given level
       function getThreshold(level) {
         return Math.floor(100 * Math.pow(1.5, level - 1));
       }
-      
-      // Helper: Total XP required to start current level
+      // Helper to get total XP required up to a given level
       function getTotalXPForLevel(level) {
         let sum = 0;
         for (let i = 1; i < level; i++) {
@@ -474,8 +496,7 @@
         }
         return sum;
       }
-      
-      // Update the XP bar and text display using currentXP and currentLevel
+      // Update XP bar & text
       function updateXPUI() {
         const baseXP = getTotalXPForLevel(currentLevel);
         const threshold = getThreshold(currentLevel);
@@ -485,8 +506,7 @@
         xpText.textContent = `Level ${currentLevel}: ${xpInLevel} / ${threshold} XP`;
         levelDisplay.textContent = `Active Level: ${currentLevel} Cyber Agent`;
       }
-      
-      // Function to trigger confetti effect on level-up
+      // Confetti effect
       function triggerConfetti() {
         confetti({
           particleCount: 100,
@@ -494,8 +514,7 @@
           origin: { y: 0.6 }
         });
       }
-      
-      // Function to add XP using the /update_xp endpoint
+      // Add XP by calling a backend endpoint
       function addXP(amount) {
         fetch('/update_xp', {
           method: 'POST',
@@ -505,12 +524,17 @@
           },
           body: JSON.stringify({ amount: amount })
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
           currentXP = data.total_xp;
+          const oldLevel = currentLevel;
           currentLevel = data.current_level;
           updateXPUI();
-          if(data.level_up) {
+          xpFill.classList.add('animate__animated', 'animate__pulse');
+          xpFill.addEventListener('animationend', () => {
+            xpFill.classList.remove('animate__animated', 'animate__pulse');
+          }, { once: true });
+          if (data.level_up) {
             triggerConfetti();
             levelDisplay.classList.add('level-up');
             setTimeout(() => levelDisplay.classList.remove('level-up'), 1000);
@@ -518,30 +542,23 @@
           }
         });
       }
+      // Button to add XP
+      addXpBtn.addEventListener('click', () => addXP(50));
       
-      // Event listener for the "+50 XP" button.
-      const addXpBtn = document.getElementById('addXpBtn');
-      addXpBtn.addEventListener('click', function() {
-        addXP(50);
-        xpFill.classList.add('animate__animated', 'animate__pulse');
-        xpFill.addEventListener('animationend', () => {
-          xpFill.classList.remove('animate__animated', 'animate__pulse');
-        }, { once: true });
-      });
-      
-      // TASK: Add Task
-      taskForm.addEventListener('submit', async (e) => {
+      // Add new task
+      taskForm.addEventListener('submit', async e => {
         e.preventDefault();
         const input = taskForm.querySelector('input[name="task"]');
-        const description = input.value.trim();
-        if (!description) return;
+        const desc = input.value.trim();
+        if (!desc) return;
+        
         const response = await fetch('/tasks', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': '{{ csrf_token() }}'
           },
-          body: JSON.stringify({ description })
+          body: JSON.stringify({ description: desc })
         });
         if (response.ok) {
           const task = await response.json();
@@ -560,57 +577,46 @@
         }
       });
       
-      // TASK: Complete or Delete Task
-      taskList.addEventListener('click', async (e) => {
+      // Task completion / deletion
+      taskList.addEventListener('click', async e => {
         const taskItem = e.target.closest('.task-item');
         if (!taskItem) return;
         const taskId = taskItem.dataset.taskId;
         
-        // Delete Task
         if (e.target.classList.contains('delete-btn')) {
+          // Delete
           await fetch(`/tasks/${taskId}`, {
             method: 'DELETE',
             headers: { 'X-CSRFToken': '{{ csrf_token() }}' }
           });
           taskItem.remove();
-        }
-        
-        // Complete Task
-        if (e.target.classList.contains('complete-btn')) {
-          const response = await fetch(`/tasks/${taskId}`, {
+        } else if (e.target.classList.contains('complete-btn')) {
+          // Complete
+          const res = await fetch(`/tasks/${taskId}`, {
             method: 'PATCH',
             headers: { 'X-CSRFToken': '{{ csrf_token() }}' }
           });
-          if (response.ok) {
-            const data = await response.json();
-            // Animate task slide-up then move it to bottom of the list
-            taskItem.classList.add('slide-up');
-            setTimeout(() => {
-              taskItem.classList.remove('slide-up');
-              taskItem.classList.add('completed'); // Mark visually completed
-              // Replace complete button with completed label
-              taskItem.innerHTML = `
-                <span class="task-desc">${taskItem.querySelector('.task-desc').textContent}</span>
-                <div class="task-actions">
-                  <span class="completed-label">Completed</span>
-                  <button class="cyber-button delete-btn" data-task-id="${taskId}">❌ Delete</button>
-                </div>
-              `;
-              // Append task to the bottom
-              taskList.appendChild(taskItem);
-            }, 500);
-            
-            // Update XP UI based on task completion response
+          if (res.ok) {
+            const data = await res.json();
+            // Mark visually completed
+            taskItem.classList.add('completed');
+            taskItem.innerHTML = `
+              <span class="task-desc">${taskItem.querySelector('.task-desc').textContent}</span>
+              <div class="task-actions">
+                <span class="completed-label">Completed</span>
+                <button class="cyber-button delete-btn" data-task-id="${taskId}">❌ Delete</button>
+              </div>
+            `;
+            // Update XP UI
             currentXP = data.total_xp;
+            const oldLevel = currentLevel;
             currentLevel = data.current_level;
             updateXPUI();
-            // Animate XP bar pulse
             xpFill.classList.add('animate__animated', 'animate__pulse');
             xpFill.addEventListener('animationend', () => {
               xpFill.classList.remove('animate__animated', 'animate__pulse');
             }, { once: true });
-            
-            if(data.level_up) {
+            if (data.level_up) {
               triggerConfetti();
               levelDisplay.classList.add('level-up');
               setTimeout(() => levelDisplay.classList.remove('level-up'), 1000);
@@ -620,7 +626,7 @@
         }
       });
       
-      // TASK: Random Task Generator
+      // Random Task Generator
       document.getElementById('random-task').addEventListener('click', () => {
         const tasks = [
           'Do 10 pushups',
@@ -630,10 +636,10 @@
           'Take a 10-minute walk'
         ];
         const randomTask = tasks[Math.floor(Math.random() * tasks.length)];
-        document.querySelector('#task-form input[name="task"]').value = randomTask;
+        taskForm.querySelector('input[name="task"]').value = randomTask;
       });
       
-      // Initial UI update for XP system.
+      // Initialize UI
       updateXPUI();
     });
   </script>
