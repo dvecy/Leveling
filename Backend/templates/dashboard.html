@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CyberLevel - Dashboard</title>
-  <!-- Optional external animate.css (if you want additional animations) -->
+  <!-- Optional external animate.css (for additional animations) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-  <!-- If you have a separate CSS file, include it here -->
-  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
+  <!-- Canvas-confetti for level-up effects -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.5.1/confetti.browser.min.js"></script>
   <style>
     /* ===================================================================
        Reset & Base Styles
@@ -163,8 +163,14 @@
     .xp-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--cyber-blue), var(--neon-purple));
+      /* Width will be updated dynamically */
       width: {{ xp_percentage }}%;
       transition: width 0.5s ease;
+    }
+    
+    /* Button to simulate adding XP */
+    #addXpBtn {
+      margin-top: 10px;
     }
     
     /* ===================================================================
@@ -213,7 +219,7 @@
       background: rgba(255, 255, 255, 0.03);
       border-radius: 8px;
       border-left: 4px solid var(--cyber-blue);
-      transition: background 0.3s, border-color 0.3s;
+      transition: background 0.3s, border-color 0.3s, transform 0.5s ease;
     }
     .task-item:hover {
       background: rgba(255, 255, 255, 0.05);
@@ -222,6 +228,15 @@
       opacity: 0.6;
       border-left-color: var(--neon-purple);
       text-decoration: line-through;
+    }
+    /* Slide animation classes for tasks */
+    .slide-up {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    .slide-down {
+      transform: translateY(100%);
+      opacity: 0;
     }
     .task-desc {
       flex-grow: 1;
@@ -306,6 +321,17 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
+    /* Glowing effect for level-up */
+    .level-up {
+      animation: glow 1s ease-in-out;
+    }
+    
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px var(--neon-purple); }
+      50% { text-shadow: 0 0 30px var(--neon-purple); }
+      100% { text-shadow: 0 0 10px var(--neon-purple); }
+    }
+    
     /* ===================================================================
        Responsive Design
     ==================================================================== */
@@ -342,8 +368,9 @@
         <div class="user-profile">
           <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" class="user-avatar" alt="User Avatar">
           <div>
-            <h1>{{ user.username }}</h1>
-            <p>Level {{ profile.level }} Cyber Agent</p>
+            <h1 id="usernameDisplay">{{ user.username }}</h1>
+            <!-- Display active level -->
+            <p id="levelDisplay">Active Level: {{ current_level }} Cyber Agent</p>
           </div>
         </div>
         <form method="POST" action="{{ url_for('auth.logout') }}">
@@ -357,9 +384,12 @@
         <div class="stat-card">
           <h3>XP Progress</h3>
           <div class="xp-progress">
-            <div class="xp-fill" style="width: {{ xp_percentage }}%;"></div>
+            <div class="xp-fill" id="xpFill" style="width: {{ xp_percentage }}%;"></div>
           </div>
-          <p>{{ profile.xp }} / {{ profile.next_level_xp }} XP</p>
+          <!-- Display XP numerically. The threshold is computed dynamically on the client side. -->
+          <p id="xpText">{{ profile.xp }} / {{ next_level_xp }} XP</p>
+          <!-- Button to simulate adding XP -->
+          <button class="cyber-button" id="addXpBtn">+50 XP</button>
         </div>
         <div class="stat-card">
           <h3>Daily Streak</h3>
@@ -419,13 +449,87 @@
   </div>
   
   <script>
-    // TASK MANAGEMENT: Add, Complete, Delete, and Random Task functionality
     document.addEventListener('DOMContentLoaded', function() {
       const taskForm = document.getElementById('task-form');
       const taskList = document.getElementById('task-list');
-      const xpFill = document.querySelector('.xp-fill');
+      const xpFill = document.getElementById('xpFill');
+      const xpText = document.getElementById('xpText');
+      const levelDisplay = document.getElementById('levelDisplay');
       
-      // Add Task
+      // --- XP System Variables ---
+      // These values are passed from the server.
+      let currentXP = {{ profile.xp }};
+      let currentLevel = {{ current_level }};
+      
+      // Helper: Calculate threshold (XP required for current level)
+      function getThreshold(level) {
+        return Math.floor(100 * Math.pow(1.5, level - 1));
+      }
+      
+      // Helper: Total XP required to start current level
+      function getTotalXPForLevel(level) {
+        let sum = 0;
+        for (let i = 1; i < level; i++) {
+          sum += getThreshold(i);
+        }
+        return sum;
+      }
+      
+      // Update the XP bar and text display using currentXP and currentLevel
+      function updateXPUI() {
+        const baseXP = getTotalXPForLevel(currentLevel);
+        const threshold = getThreshold(currentLevel);
+        const xpInLevel = currentXP - baseXP;
+        const xpPercentage = Math.min((xpInLevel / threshold) * 100, 100);
+        xpFill.style.width = xpPercentage + '%';
+        xpText.textContent = `Level ${currentLevel}: ${xpInLevel} / ${threshold} XP`;
+        levelDisplay.textContent = `Active Level: ${currentLevel} Cyber Agent`;
+      }
+      
+      // Function to trigger confetti effect on level-up
+      function triggerConfetti() {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+      
+      // Function to add XP using the /update_xp endpoint
+      function addXP(amount) {
+        fetch('/update_xp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+          },
+          body: JSON.stringify({ amount: amount })
+        })
+        .then(response => response.json())
+        .then(data => {
+          currentXP = data.total_xp;
+          currentLevel = data.current_level;
+          updateXPUI();
+          if(data.level_up) {
+            triggerConfetti();
+            levelDisplay.classList.add('level-up');
+            setTimeout(() => levelDisplay.classList.remove('level-up'), 1000);
+            alert(`Congratulations! Level ${currentLevel} Achieved!`);
+          }
+        });
+      }
+      
+      // Event listener for the "+50 XP" button.
+      const addXpBtn = document.getElementById('addXpBtn');
+      addXpBtn.addEventListener('click', function() {
+        addXP(50);
+        xpFill.classList.add('animate__animated', 'animate__pulse');
+        xpFill.addEventListener('animationend', () => {
+          xpFill.classList.remove('animate__animated', 'animate__pulse');
+        }, { once: true });
+      });
+      
+      // TASK: Add Task
       taskForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const input = taskForm.querySelector('input[name="task"]');
@@ -456,10 +560,13 @@
         }
       });
       
-      // Complete or Delete Task
+      // TASK: Complete or Delete Task
       taskList.addEventListener('click', async (e) => {
         const taskItem = e.target.closest('.task-item');
+        if (!taskItem) return;
         const taskId = taskItem.dataset.taskId;
+        
+        // Delete Task
         if (e.target.classList.contains('delete-btn')) {
           await fetch(`/tasks/${taskId}`, {
             method: 'DELETE',
@@ -467,27 +574,53 @@
           });
           taskItem.remove();
         }
+        
+        // Complete Task
         if (e.target.classList.contains('complete-btn')) {
-          const response = await fetch(`/tasks/${taskId}/complete`, {
+          const response = await fetch(`/tasks/${taskId}`, {
             method: 'PATCH',
             headers: { 'X-CSRFToken': '{{ csrf_token() }}' }
           });
           if (response.ok) {
             const data = await response.json();
-            taskItem.classList.add('completed');
-            taskItem.innerHTML = `
-              <span class="task-desc">${taskItem.querySelector('.task-desc').textContent}</span>
-              <div class="task-actions">
-                <span class="completed-label">Completed</span>
-                <button class="cyber-button delete-btn" data-task-id="${taskId}">❌ Delete</button>
-              </div>
-            `;
-            xpFill.style.width = `${(data.xp / data.next_level_xp) * 100}%`;
+            // Animate task slide-up then move it to bottom of the list
+            taskItem.classList.add('slide-up');
+            setTimeout(() => {
+              taskItem.classList.remove('slide-up');
+              taskItem.classList.add('completed'); // Mark visually completed
+              // Replace complete button with completed label
+              taskItem.innerHTML = `
+                <span class="task-desc">${taskItem.querySelector('.task-desc').textContent}</span>
+                <div class="task-actions">
+                  <span class="completed-label">Completed</span>
+                  <button class="cyber-button delete-btn" data-task-id="${taskId}">❌ Delete</button>
+                </div>
+              `;
+              // Append task to the bottom
+              taskList.appendChild(taskItem);
+            }, 500);
+            
+            // Update XP UI based on task completion response
+            currentXP = data.total_xp;
+            currentLevel = data.current_level;
+            updateXPUI();
+            // Animate XP bar pulse
+            xpFill.classList.add('animate__animated', 'animate__pulse');
+            xpFill.addEventListener('animationend', () => {
+              xpFill.classList.remove('animate__animated', 'animate__pulse');
+            }, { once: true });
+            
+            if(data.level_up) {
+              triggerConfetti();
+              levelDisplay.classList.add('level-up');
+              setTimeout(() => levelDisplay.classList.remove('level-up'), 1000);
+              alert(`Congratulations! Level ${currentLevel} Achieved!`);
+            }
           }
         }
       });
       
-      // Random Task Generator
+      // TASK: Random Task Generator
       document.getElementById('random-task').addEventListener('click', () => {
         const tasks = [
           'Do 10 pushups',
@@ -499,6 +632,9 @@
         const randomTask = tasks[Math.floor(Math.random() * tasks.length)];
         document.querySelector('#task-form input[name="task"]').value = randomTask;
       });
+      
+      // Initial UI update for XP system.
+      updateXPUI();
     });
   </script>
 </body>
