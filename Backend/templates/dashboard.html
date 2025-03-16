@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Darken Dashboard</title>
+  <title>Lev8ora Dashboard</title>
   
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
   <!-- ========== SIDEBAR ========== -->
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <span class="brand-text">Darken</span>
+      <span class="brand-text">Lev8ora</span>
     </div>
     <ul class="sidebar-nav">
       <li class="nav-item active">
@@ -60,7 +60,6 @@
       </div>
       <div class="topbar-right">
         <div class="user-info">
-          <!-- You can show a user avatar or name here if you want -->
           <span class="user-name">{{ user.username }}</span>
           <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" alt="Avatar" class="topbar-avatar">
         </div>
@@ -161,14 +160,14 @@
       </section>
       
       <!-- ========== FOOTER ========== -->
-      <footer class="darken-footer">
-        <p>&copy; 2025 Darken Dashboard. All rights reserved.</p>
+      <footer class="lev8ora-footer">
+        <p>&copy; 2025 Lev8ora Dashboard. All rights reserved.</p>
       </footer>
     </div>
   </div>
   
   <!-- ========== SETTINGS MODAL ========== -->
-  <div id="settingsModal" class="darken-modal">
+  <div id="settingsModal" class="lev8ora-modal">
     <div class="modal-content">
       <span class="close" id="closeSettingsBtn">&times;</span>
       <h2>Account Settings</h2>
@@ -194,7 +193,7 @@
   
   <!-- ========== SCRIPTS ========== -->
   <script>
-    // Modal Logic
+    // Settings Modal Logic
     const settingsModal = document.getElementById('settingsModal');
     const openSettingsBtn = document.getElementById('openSettingsBtn');
     const closeSettingsBtn = document.getElementById('closeSettingsBtn');
