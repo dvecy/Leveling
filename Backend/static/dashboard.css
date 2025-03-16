@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DASHBOARD LAYOUT
+   DASHBOARD LAYOUT - DESKTOP FIRST
    ========================================================================== */
 
 /* Sidebar */
@@ -60,51 +60,15 @@
     flex-direction: column;
   }
   
-  /* Topbar */
+  /* Minimal topbar (optional or empty) */
   .topbar {
     width: 100%;
     background: #1f1f2f;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     padding: 0.75rem 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  }
-  .topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .search-bar input {
-    background: #2e2e4f;
-    border: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: 4px;
-    color: #fff;
-    width: 200px;
-  }
-  .search-bar input::placeholder {
-    color: #aaa;
-  }
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .user-info {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .user-name {
-    font-size: 0.9rem;
-    color: #fff;
-  }
-  .topbar-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
   }
   .btn-logout {
     background: linear-gradient(45deg, #f43f5e, #be123c);
@@ -138,6 +102,30 @@
   .page-heading p {
     font-size: 0.9rem;
     color: #bbb;
+  }
+  
+  /* User Panel (Profile + Level) */
+  .user-panel {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #1a1a33;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
+  .user-panel-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .profile-avatar {
+    width: 64px;
+    height: 64px;
+    border: 2px solid #00f3ff;
+    border-radius: 50%;
+    object-fit: cover;
   }
   
   /* Stats Row */
@@ -181,33 +169,6 @@
   .streak-text {
     font-size: 1.4rem;
     color: #fff;
-  }
-  
-  /* User Panel (Profile + Settings) */
-  .user-panel {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #1a1a33;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  }
-  .user-panel-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .profile-avatar {
-    width: 64px;
-    height: 64px;
-    border: 2px solid #00f3ff;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  .user-panel-right {
-    /* For additional buttons if needed */
   }
   
   /* Tasks Section */
@@ -290,7 +251,7 @@
     margin-bottom: 0.5rem;
   }
   
-  /* Footer (Updated Branding) */
+  /* Footer */
   .lev8ora-footer {
     text-align: center;
     padding: 1rem;
@@ -300,7 +261,7 @@
     font-size: 0.9rem;
   }
   
-  /* Modal (Settings) - Updated class names */
+  /* Modal (Settings) */
   .lev8ora-modal {
     display: none;
     position: fixed;
@@ -349,9 +310,6 @@
   
   /* For tablets and small desktops */
   @media (max-width: 992px) {
-    .topbar-left .search-bar input {
-      width: 120px;
-    }
     .sidebar {
       width: 200px;
     }
@@ -360,50 +318,75 @@
     }
   }
   
-  /* For mobile devices */
+  /* For mobile devices (below 768px) */
   @media (max-width: 768px) {
+    /* Sidebar becomes top block, not fixed left */
     .sidebar {
-      position: relative;
+      position: static;
       width: 100%;
       height: auto;
-      display: flex;
-      overflow: visible;
+      display: block;
+      box-shadow: none;
+      border-bottom: 1px solid #333;
+      margin-bottom: 1rem;
+    }
+    .sidebar-brand {
+      text-align: center;
+      margin-bottom: 0.5rem;
     }
     .sidebar-nav {
-      flex-direction: row;
-      overflow-x: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    .nav-item {
+      margin-bottom: 0;
+      width: 100%;
+    }
+    .nav-link {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
     }
     .main-wrapper {
       margin-left: 0;
     }
+    .user-panel {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
     .stats-row {
       flex-direction: column;
+      align-items: center;
     }
     .reward-penalty-row {
       flex-direction: column;
+      align-items: center;
     }
   }
   
-  /* For very small mobile screens */
+  /* For very small mobile screens (below 480px) */
   @media (max-width: 480px) {
-    .topbar {
-      flex-direction: column;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-    }
-    .sidebar {
-      padding: 0.5rem;
-    }
     .profile-avatar {
       width: 48px;
       height: 48px;
     }
     .stats-card {
       padding: 0.8rem;
+      min-width: 200px;
     }
     .task-item {
       flex-direction: column;
       align-items: flex-start;
+    }
+    .task-desc {
+      margin-bottom: 0.5rem;
+    }
+    .nav-icon {
+      font-size: 1rem;
     }
   }
   

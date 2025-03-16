@@ -26,51 +26,48 @@
       <span class="brand-text">Lev8ora</span>
     </div>
     <ul class="sidebar-nav">
-      <li class="nav-item active">
-        <a href="#" class="nav-link">
-          <i class="nav-icon">&#128200;</i> <!-- Example icon (unicode) -->
-          <span>Dashboard</span>
-        </a>
-      </li>
+      <!-- Order: Analysis, Reports, Dashboard, then Settings, then Logout -->
       <li class="nav-item">
         <a href="#" class="nav-link">
-          <i class="nav-icon">&#128202;</i>
+          <i class="nav-icon">📊</i>
           <span>Analysis</span>
         </a>
       </li>
       <li class="nav-item">
         <a href="#" class="nav-link">
-          <i class="nav-icon">&#128196;</i>
+          <i class="nav-icon">📄</i>
           <span>Reports</span>
         </a>
       </li>
-      <!-- Add more nav items as desired -->
+      <li class="nav-item active">
+        <a href="#" class="nav-link">
+          <i class="nav-icon">🏠</i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <!-- Settings opens the modal -->
+      <li class="nav-item">
+        <a href="#" class="nav-link" id="sidebarSettingsLink">
+          <i class="nav-icon">⚙️</i>
+          <span>Settings</span>
+        </a>
+      </li>
+      <!-- Logout button below Settings -->
+      <li class="nav-item">
+        <form id="logoutForm" method="POST" action="{{ url_for('auth.logout') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="nav-link" style="border:none; background:none; cursor:pointer;" type="submit">
+            <i class="nav-icon">🚪</i>
+            <span>Logout</span>
+          </button>
+        </form>
+      </li>
     </ul>
   </aside>
   
-  <!-- ========== MAIN CONTENT WRAPPER ========== -->
+  <!-- ========== MAIN WRAPPER ========== -->
   <div class="main-wrapper">
-    
-    <!-- ========== TOP NAVBAR ========== -->
-    <header class="topbar">
-      <div class="topbar-left">
-        <div class="search-bar">
-          <input type="text" placeholder="Search..." />
-        </div>
-      </div>
-      <div class="topbar-right">
-        <div class="user-info">
-          <span class="user-name">{{ user.username }}</span>
-          <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" alt="Avatar" class="topbar-avatar">
-        </div>
-        <button class="btn-logout" onclick="document.getElementById('logoutForm').submit();">
-          Logout
-        </button>
-        <form id="logoutForm" method="POST" action="{{ url_for('auth.logout') }}" style="display:none;">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        </form>
-      </div>
-    </header>
+    <!-- (No topbar, or keep it minimal/empty if you want) -->
     
     <!-- ========== MAIN CONTENT AREA ========== -->
     <div class="content-area">
@@ -78,6 +75,17 @@
       <div class="page-heading">
         <h1>Dashboard</h1>
         <p>Manage your progress, tasks, and daily streaks</p>
+      </div>
+      
+      <!-- User Info (photo, name, level) under Dashboard heading -->
+      <div class="user-panel" style="margin-bottom: 2rem;">
+        <div class="user-panel-left">
+          <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" class="profile-avatar" alt="User Avatar">
+          <div>
+            <h2 id="usernameDisplay">{{ user.username }}</h2>
+            <p id="levelDisplay">Active Level: {{ current_level }} Cyber Agent</p>
+          </div>
+        </div>
       </div>
       
       <!-- Quick Stats Cards -->
@@ -103,20 +111,6 @@
           <div class="stats-card-body">
             <p id="streakDisplay" class="streak-text">{{ profile.streak }} Days 🔥</p>
           </div>
-        </div>
-      </div>
-      
-      <!-- ========== USER PROFILE & SETTINGS BUTTON ========== -->
-      <div class="user-panel">
-        <div class="user-panel-left">
-          <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" class="profile-avatar" alt="User Avatar">
-          <div>
-            <h2 id="usernameDisplay">{{ user.username }}</h2>
-            <p id="levelDisplay">Active Level: {{ current_level }} Cyber Agent</p>
-          </div>
-        </div>
-        <div class="user-panel-right">
-          <button class="btn-darken" id="openSettingsBtn">Settings</button>
         </div>
       </div>
       
@@ -191,14 +185,15 @@
     </div>
   </div>
   
-  <!-- ========== SCRIPTS ========== -->
+  <!-- ========== DASHBOARD SCRIPTS ========== -->
   <script>
-    // Settings Modal Logic
+    // Make the "Settings" link in the sidebar open the modal
+    const sidebarSettingsLink = document.getElementById('sidebarSettingsLink');
     const settingsModal = document.getElementById('settingsModal');
-    const openSettingsBtn = document.getElementById('openSettingsBtn');
     const closeSettingsBtn = document.getElementById('closeSettingsBtn');
     
-    openSettingsBtn.addEventListener('click', () => {
+    sidebarSettingsLink.addEventListener('click', (e) => {
+      e.preventDefault();
       settingsModal.style.display = 'block';
     });
     closeSettingsBtn.addEventListener('click', () => {
@@ -262,7 +257,6 @@
         .then(res => res.json())
         .then(data => {
           currentXP = data.total_xp;
-          const oldLevel = currentLevel;
           currentLevel = data.current_level;
           updateXPUI();
           xpFill.classList.add('animate__animated', 'animate__pulse');
