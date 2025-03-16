@@ -1,0 +1,137 @@
+/* ==========================================================================
+   AUTH.CSS - Darken-Style Authentication Pages
+   ========================================================================== */
+
+/* Overall page container for auth pages */
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #0d0d1a; /* match your Darken background */
+    /* Optional gradient or image overlay:
+       background: linear-gradient(135deg, #0d0d1a, #1a1a33);
+       or a background image if you prefer
+    */
+  }
+  
+  /* A wrapper to hold the form/card */
+  .auth-container {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(26, 26, 51, 0.9);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    position: relative;
+    margin: 1rem;
+  }
+  
+  /* Auth page headings */
+  .auth-container h1,
+  .auth-container h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #00f3ff; /* neon accent */
+    font-size: 1.8rem;
+    text-transform: uppercase;
+  }
+  
+  /* Form group spacing */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  /* Labels in the auth pages (override the base label style if needed) */
+  .auth-container label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    color: #bbb;
+  }
+  
+  /* Inputs - we can rely on your global "styles.css" defaults, or tweak them here */
+  .auth-container input[type="text"],
+  .auth-container input[type="email"],
+  .auth-container input[type="password"] {
+    width: 100%;
+    padding: 0.65rem;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background: #222;
+    color: #fff;
+    margin-bottom: 0.8rem;
+    font-family: inherit;
+  }
+  .auth-container input:focus {
+    outline: 2px solid #6366f1;
+  }
+  
+  /* Buttons for the auth pages */
+  .auth-container button,
+  .auth-container .btn-darken {
+    width: 100%;
+    margin-top: 0.5rem;
+    background: linear-gradient(45deg, #6366f1, #9333ea);
+    border: none;
+    border-radius: 5px;
+    padding: 0.65rem 1rem;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: 0.3s ease;
+    text-transform: uppercase;
+  }
+  .auth-container button:hover,
+  .auth-container .btn-darken:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+  
+  /* Links for switching pages (login <-> register, etc.) */
+  .auth-links {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .auth-links a {
+    color: #00f3ff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+  }
+  .auth-links a:hover {
+    color: #bc13fe;
+    text-decoration: underline;
+  }
+  
+  /* Flash messages or alerts */
+  .alert {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .alert.error {
+    background: #ff4444;
+    color: #fff;
+  }
+  .alert.success {
+    background: #28a745;
+    color: #fff;
+  }
+  .alert.info {
+    background: #17a2b8;
+    color: #fff;
+  }
+  
+  /* Optional logo or branding at top (if desired) */
+  .auth-logo {
+    display: block;
+    margin: 0 auto 1rem auto;
+    max-width: 100px;
+  }
+  
+  

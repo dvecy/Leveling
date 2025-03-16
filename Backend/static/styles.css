@@ -1,627 +1,119 @@
 /* ==========================================================================
-   Cyber Theme & Advanced Responsive CSS
+   GLOBAL RESET & BASE
    ========================================================================== */
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
-/* ==========================================================================
-   Reset & Global Styles
-   ========================================================================== */
+/* Reset margins and paddings for all elements */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Base HTML and body settings */
 html, body {
-  width: 100%;
-  height: 100%;
-}
-
-body {
-  font-family: 'Poppins', sans-serif;
-  background: url('https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
-  background-size: cover;
-  background-color: #141e30;
-  color: #e0e0e0;
-  line-height: 1.6;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  text-align: center;
-}
-
-/* Cyber overlay to darken the background */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(20,30,48,0.85), rgba(36,59,85,0.85));
-  z-index: -2;
-}
-
-/* Particle background container (if used) */
-.particle-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  z-index: -3;
-}
-
-/* ==========================================================================
-   Layout Containers
-   ========================================================================== */
-.container {
-  width: 100%;
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 30px 40px;
-  background: rgba(37,36,54,0.95);
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.6);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-}
-
-.container:hover {
-  transform: scale(1.02);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.8);
-}
-
-/* Home/Dashboard containers */
-.home-container,
-.dashboard-container {
-  width: 100%;
-  max-width: 600px;
-  padding: 30px 40px;
-  background: rgba(0,0,0,0.6);
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.7);
-  margin: 30px auto;
-  animation: fadeIn 1s ease;
-}
-
-/* Sidebar container (if used) */
-.sidebar {
-  width: 250px;
-  background: rgba(20,30,48,0.9);
-  padding: 20px;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  overflow-y: auto;
-  transition: transform 0.3s ease;
-}
-
-.sidebar.hidden {
-  transform: translateX(-100%);
-}
-
-/* ==========================================================================
-   Header & Navigation
-   ========================================================================== */
-.navbar {
-  width: 100%;
-  padding: 20px;
-  background: rgba(0,0,0,0.7);
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.navbar .logo {
-  font-size: 24px;
-  color: #00aaff;
-  font-weight: 700;
-}
-
-.navbar ul {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-
-.navbar ul li a {
-  font-size: 16px;
-  color: #e0e0e0;
-  transition: color 0.3s ease;
-}
-
-.navbar ul li a:hover {
-  color: #00aaff;
-}
-
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-.footer {
-  width: 100%;
-  padding: 20px;
-  background: rgba(0,0,0,0.8);
-  color: #aaa;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  font-size: 14px;
-}
-
-/* ==========================================================================
-   Typography & Headings
-   ========================================================================== */
-h1, h2, h3, h4 {
-  margin-bottom: 20px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-h1 {
-  font-size: 38px;
-  font-weight: 600;
-  color: #00aaff;
-}
-
-h2 {
-  font-size: 30px;
-  font-weight: 500;
-  color: #ffffff;
-}
-
-h3 {
-  font-size: 26px;
-  font-weight: 500;
-  color: #00aaff;
-}
-
-h4 {
-  font-size: 22px;
-  font-weight: 400;
-  color: #cccccc;
-}
-
-p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-/* ==========================================================================
-   Forms & Inputs
-   ========================================================================== */
-.form-group {
-  text-align: left;
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #ccc;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea {
-  width: 100%;
-  padding: 14px 16px;
-  margin-bottom: 20px;
-  border: none;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.1);
-  color: #e0e0e0;
-  font-size: 16px;
-  transition: background 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
-}
-
-input:focus,
-textarea:focus {
-  background: rgba(255,255,255,0.2);
-  border: 1px solid #00aaff;
-  outline: none;
-  box-shadow: 0 0 10px #00aaff;
-}
-
-/* ==========================================================================
-   Buttons
-   ========================================================================== */
-button, .btn {
-  display: inline-block;
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 20px;
-  background: linear-gradient(135deg, #00aaff, #007acc);
-  border: none;
-  border-radius: 8px;
+  font-family: 'Orbitron', sans-serif;
+  background: #141414;
   color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  text-decoration: none;
-  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,170,255,0.5);
+  height: 100%;
+  width: 100%;
 }
 
-button:hover, .btn:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #007acc, #005f99);
-  box-shadow: 0 8px 20px rgba(0,170,255,0.7);
-}
-
-/* Specific button styles */
-.btn.logout {
-  background: #ff4444;
-}
-
-.btn.logout:hover {
-  background: #d32f2f;
-}
-
-.btn.register {
-  background: #ff5722;
-}
-
-.btn.register:hover {
-  background: #e64a19;
-}
-
-/* ==========================================================================
-   Links
-   ========================================================================== */
-.redirect-text {
-  margin-top: 15px;
-  font-size: 14px;
-}
-
+/* Links inherit color and remove underline by default */
 a {
-  color: #00aaff;
   text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: #007acc;
-  text-decoration: underline;
+  color: inherit;
 }
 
 /* ==========================================================================
-   Flash Messages
+   SIMPLE UTILITY CLASSES
    ========================================================================== */
-.flash-messages, .error, .success, .info {
-  padding: 16px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  font-weight: bold;
-  text-align: left;
+
+/* Center text alignment */
+.text-center {
+  text-align: center;
 }
 
-.flash-messages, .error {
-  background: #ff4444;
-  color: #fff;
-}
-
-.success {
-  background: #28a745;
-  color: #fff;
-}
-
-.info {
-  background: #17a2b8;
-  color: #fff;
+/* Force element to be hidden */
+.hidden {
+  display: none !important;
 }
 
 /* ==========================================================================
-   Advanced Cyber UI Elements
+   BUTTONS
    ========================================================================== */
-.cyber-card {
-  background: rgba(37,36,54,0.9);
-  padding: 20px;
-  border-radius: 10px;
-  margin: 20px auto;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.8);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
 
-.cyber-card:hover {
-  transform: translateY(-5px);
-}
-
-.cyber-button {
-  background: linear-gradient(135deg, #00aaff, #007acc);
+/* Generic button style for .btn-darken or <button> elements */
+button,
+.btn-darken {
+  cursor: pointer;
   border: none;
-  border-radius: 6px;
-  padding: 12px 20px;
-  font-size: 16px;
+  outline: none;
+  font-family: inherit;
+  padding: 0.65rem 1rem;
+  border-radius: 5px;
   color: #fff;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
+  /* Gradient background */
+  background: linear-gradient(45deg, #6366f1, #9333ea);
+  transition: 0.3s ease;
 }
 
-.cyber-button:hover {
-  background: linear-gradient(135deg, #007acc, #005f99);
-  transform: scale(1.05);
-}
-
-/* Gradient overlays */
-.gradient-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(0,170,255,0.3), rgba(0,122,204,0.3));
-  pointer-events: none;
-  border-radius: 12px;
-}
-
-/* Data Table for Displaying Users */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.data-table th, .data-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.data-table th {
-  background: rgba(0,170,255,0.2);
-}
-
-.data-table tr:hover {
-  background: rgba(0,170,255,0.1);
+/* Hover effect for buttons */
+button:hover,
+.btn-darken:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
 }
 
 /* ==========================================================================
-   Modal Styles
+   INPUT FIELDS
    ========================================================================== */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1500;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.8);
-}
 
-.modal-content {
-  background: rgba(20,30,48,0.95);
-  margin: 10% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 90%;
-  max-width: 500px;
-  border-radius: 8px;
-  text-align: left;
-}
-
-.close-modal {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.close-modal:hover,
-.close-modal:focus {
+/* Basic styling for text/password/file inputs */
+input[type="text"],
+input[type="password"],
+input[type="file"] {
+  padding: 0.65rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background: #222;
   color: #fff;
-  text-decoration: none;
+  margin-bottom: 1rem;
+  width: 100%;
+  font-family: inherit;
+}
+
+/* Placeholder text color */
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: #888;
+}
+
+/* Focus outline for inputs */
+input:focus {
+  outline: 2px solid #6366f1;
 }
 
 /* ==========================================================================
-   Advanced Form Enhancements
+   LABELS
    ========================================================================== */
-.form-enhanced {
-  margin-top: 20px;
-}
 
-.form-enhanced label {
+/* Basic label styling */
+label {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
   display: block;
-  margin-bottom: 8px;
-  font-size: 16px;
-  color: #00aaff;
-}
-
-.form-enhanced input {
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 12px;
-  border-radius: 6px;
-  width: 100%;
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  font-size: 16px;
-  margin-bottom: 15px;
-  transition: background 0.3s ease, border 0.3s ease;
-}
-
-.form-enhanced input:focus {
-  border-color: #00aaff;
-  background: rgba(255,255,255,0.2);
+  color: #bbb;
 }
 
 /* ==========================================================================
-   Sidebar (if used)
+   OPTIONAL ANIMATE.CSS OVERRIDE
    ========================================================================== */
-.sidebar {
-  width: 250px;
-  background: rgba(20,30,48,0.9);
-  padding: 20px;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  overflow-y: auto;
-  transition: transform 0.3s ease;
-}
 
-.sidebar.hidden {
-  transform: translateX(-100%);
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-}
-
-.sidebar ul li {
-  margin: 10px 0;
-}
-
-.sidebar ul li a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 16px;
-  transition: color 0.3s ease;
-}
-
-.sidebar ul li a:hover {
-  color: #00aaff;
+/* Example: Adjust default animation speed from animate.css if needed */
+.animate__animated {
+  --animate-duration: 0.5s; /* default is 1s */
 }
 
 /* ==========================================================================
-   Advanced Animations & Effects
+   END OF STYLES.CSS
    ========================================================================== */
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
-}
-
-.pulse-animation {
-  animation: pulse 2s infinite;
-}
-
-@keyframes cyberGlow {
-  0% { box-shadow: 0 0 15px rgba(0,170,255,0.5); }
-  50% { box-shadow: 0 0 30px rgba(0,170,255,0.7); }
-  100% { box-shadow: 0 0 15px rgba(0,170,255,0.5); }
-}
-
-.cyber-glow {
-  animation: cyberGlow 2s infinite alternate;
-}
-
-/* ==========================================================================
-   Utility Classes
-   ========================================================================== */
-.mt-10 { margin-top: 10px; }
-.mt-20 { margin-top: 20px; }
-.mt-30 { margin-top: 30px; }
-.mb-10 { margin-bottom: 10px; }
-.mb-20 { margin-bottom: 20px; }
-.mb-30 { margin-bottom: 30px; }
-.p-10 { padding: 10px; }
-.p-20 { padding: 20px; }
-.p-30 { padding: 30px; }
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-.uppercase { text-transform: uppercase; }
-.lowercase { text-transform: lowercase; }
-.capitalize { text-transform: capitalize; }
-.w-100 { width: 100%; }
-.max-w-600 { max-width: 600px; }
-.max-w-400 { max-width: 400px; }
-
-/* ==========================================================================
-   Advanced Responsive Design
-   ========================================================================== */
-@media (max-width: 992px) {
-  .navbar ul {
-    gap: 15px;
-  }
-  h1 {
-    font-size: 32px;
-  }
-  h2 {
-    font-size: 28px;
-  }
-  .container {
-    max-width: 90%;
-    padding: 25px;
-  }
-}
-
-@media (max-width: 768px) {
-  body {
-    padding: 10px;
-    font-size: 14px;
-  }
-  .navbar {
-    flex-direction: column;
-    padding: 15px;
-  }
-  .navbar ul {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .container, .home-container, .dashboard-container {
-    padding: 20px;
-    margin: 10px auto;
-  }
-  h1 {
-    font-size: 28px;
-  }
-  h2 {
-    font-size: 24px;
-  }
-  button, .btn {
-    font-size: 16px;
-    padding: 10px;
-  }
-  input, textarea {
-    font-size: 14px;
-    padding: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .navbar .logo {
-    font-size: 20px;
-  }
-  h1 {
-    font-size: 24px;
-  }
-  h2 {
-    font-size: 20px;
-  }
-  .container {
-    padding: 15px;
-  }
-  button, .btn {
-    font-size: 14px;
-    padding: 8px;
-  }
-  input, textarea {
-    font-size: 12px;
-    padding: 8px;
-  }
-}
-
-/* ==========================================================================
-   End of CSS File
-   ========================================================================== */
-  

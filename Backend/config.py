@@ -9,13 +9,20 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    MAX_FILE_SIZE = 2 * 1024 * 1024  # 2MB
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
-    ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@example.com')
-    ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'SecurePassword123!')
+    RATELIMIT_STORAGE_URL = "redis://localhost:6379/0"
+    CSP = {
+        'default-src': "'self'",
+        'script-src': ["'self'", "https://cdnjs.cloudflare.com"],
+        'style-src': ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        'font-src': ["'self'", "https://fonts.gstatic.com"],
+        'img-src': ["'self'", "data:"]
+    }
 
     @staticmethod
     def init_app(app):

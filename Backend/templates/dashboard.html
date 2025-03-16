@@ -1,477 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>CyberLevel - Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Darken Dashboard</title>
   
-  <!-- Optional external animate.css (for additional animations) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-  <!-- Canvas-confetti for level-up effects -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.5.1/confetti.browser.min.js"></script>
-  
-  <!-- Google Font: Orbitron (for a futuristic look) -->
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   
-  <style>
-    /****************************************************************
-     1) RESET & BASE
-    ****************************************************************/
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      font-family: 'Orbitron', sans-serif;
-      min-height: 100vh;
-      line-height: 1.5;
-      background: #0d0d1a; /* fallback */
-      color: #e6e6ff;
-    }
-    /* Smooth scrolling for anchors (optional) */
-    html {
-      scroll-behavior: smooth;
-    }
-    
-    /****************************************************************
-     2) BACKGROUND GRIDS & EFFECTS
-    ****************************************************************/
-    body {
-      /* A layered neon gradient background */
-      background: radial-gradient(circle at 20% 20%, rgba(255,0,150,0.1), transparent 40%),
-                  radial-gradient(circle at 80% 80%, rgba(0,255,255,0.1), transparent 40%),
-                  linear-gradient(135deg, #0d0d1a 0%, #1a1a33 100%);
-      overflow-x: hidden;
-    }
-    .cyber-grid {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: -1;
-      /* Subtle cyber grid overlay */
-      background-image:
-        linear-gradient(rgba(0, 243, 255, 0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 243, 255, 0.07) 1px, transparent 1px);
-      background-size: 25px 25px;
-    }
-    
-    /****************************************************************
-     3) COLOR & THEME VARIABLES
-    ****************************************************************/
-    :root {
-      --cyber-blue: #00f3ff;
-      --neon-purple: #bc13fe;
-      --dark-bg: #0d0a12;
-      --container-bg: rgba(0, 0, 0, 0.85);
-      --border-color: #00f3ff;
-      --shadow: 0 0 40px rgba(0, 255, 255, 0.15);
-      --text-primary: #e6e6ff;
-      --danger-red: #ff4444;
-    }
-    
-    /****************************************************************
-     4) LAYOUT WRAPPER & CONTAINER
-    ****************************************************************/
-    .dashboard-wrapper {
-      max-width: 1300px;
-      margin: 3rem auto;
-      padding: 20px;
-      position: relative;
-    }
-    .dashboard-container {
-      background: var(--container-bg);
-      border: 1px solid rgba(0, 243, 255, 0.2);
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      padding: 2rem;
-      animation: fadeIn 1.2s ease-out;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    /****************************************************************
-     5) HEADER / USER PROFILE
-    ****************************************************************/
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding: 1rem;
-      background: rgba(10, 10, 18, 0.9);
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 0 15px var(--border-color);
-    }
-    .user-profile {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .user-avatar {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      border: 3px solid var(--cyber-blue);
-      box-shadow: 0 0 15px var(--cyber-blue);
-      object-fit: cover;
-    }
-    .dashboard-header h1 {
-      font-size: 2rem;
-      color: var(--cyber-blue);
-      text-shadow: 0 0 8px var(--cyber-blue);
-    }
-    .dashboard-header p {
-      font-size: 1rem;
-      color: var(--text-primary);
-    }
-    
-    /****************************************************************
-     6) CYBER BUTTON STYLES
-    ****************************************************************/
-    .cyber-button, .btn {
-      background: linear-gradient(45deg, var(--cyber-blue), var(--neon-purple));
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      padding: 0.65rem 1rem;
-      cursor: pointer;
-      text-transform: uppercase;
-      font-weight: 600;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .cyber-button::before, .btn::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 0%; height: 100%;
-      background: rgba(255,255,255,0.3);
-      transition: all 0.3s ease;
-      z-index: 1;
-    }
-    .cyber-button:hover::before, .btn:hover::before {
-      width: 100%;
-    }
-    .cyber-button:hover, .btn:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 0 15px var(--cyber-blue);
-    }
-    
-    /****************************************************************
-     7) STATS GRID & XP PROGRESS
-    ****************************************************************/
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    .stat-card {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1.5rem;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      position: relative;
-    }
-    .stat-card::before {
-      /* Decorative neon border accent */
-      content: "";
-      position: absolute;
-      top: -2px; left: -2px; right: -2px; bottom: -2px;
-      border: 2px dashed var(--neon-purple);
-      opacity: 0.1;
-      pointer-events: none;
-      border-radius: inherit;
-    }
-    .stat-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 20px var(--cyber-blue);
-    }
-    .stat-card h3 {
-      font-size: 1.5rem;
-      color: var(--neon-purple);
-      margin-bottom: 0.5rem;
-      text-shadow: 0 0 8px var(--neon-purple);
-    }
-    .xp-progress {
-      height: 24px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      overflow: hidden;
-      margin: 10px 0;
-    }
-    .xp-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--cyber-blue), var(--neon-purple));
-      width: {{ xp_percentage }}%;
-      transition: width 0.5s ease;
-    }
-    
-    /****************************************************************
-     8) TASKS SECTION
-    ****************************************************************/
-    .tasks-section {
-      margin-top: 2rem;
-    }
-    .tasks-section h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      text-align: center;
-      color: var(--cyber-blue);
-      text-shadow: 0 0 8px var(--cyber-blue);
-    }
-    .task-form {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .task-form input[type="text"] {
-      flex-grow: 1;
-      padding: 0.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 5px;
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
-      transition: background 0.3s, border-color 0.3s;
-    }
-    .task-form input[type="text"]:focus {
-      outline: none;
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--cyber-blue);
-    }
-    .task-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .task-item {
-      display: flex;
-      align-items: center;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 8px;
-      border-left: 4px solid var(--cyber-blue);
-      transition: background 0.3s, border-color 0.3s;
-      position: relative;
-    }
-    .task-item:hover {
-      background: rgba(255, 255, 255, 0.07);
-    }
-    .task-item.completed {
-      opacity: 0.6;
-      border-left-color: var(--neon-purple);
-      text-decoration: line-through;
-    }
-    .task-desc {
-      flex-grow: 1;
-      font-size: 1.1rem;
-      padding-right: 10px;
-      text-align: left;
-    }
-    .task-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-    
-    /****************************************************************
-     9) REWARD & PENALTY
-    ****************************************************************/
-    .reward-penalty {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-    .reward, .penalty {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1.5rem;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      flex: 1;
-      min-width: 250px;
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      position: relative;
-    }
-    .reward:hover, .penalty:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 15px var(--neon-purple);
-    }
-    .reward h3, .penalty h3 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--neon-purple);
-      text-shadow: 0 0 8px var(--neon-purple);
-    }
-    .reward p, .penalty p {
-      font-size: 1.2rem;
-      color: #fff;
-    }
-    
-    /****************************************************************
-     10) FOOTER
-    ****************************************************************/
-    footer {
-      margin-top: 2rem;
-      text-align: center;
-    }
-    .back-link {
-      margin-top: 1rem;
-      font-size: 1rem;
-    }
-    .back-link a {
-      color: var(--cyber-blue);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    .back-link a:hover {
-      color: var(--neon-purple);
-      text-decoration: underline;
-    }
-    
-    /****************************************************************
-     11) ANIMATIONS
-    ****************************************************************/
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Glow effect on level-up */
-    .level-up {
-      animation: glow 1s ease-in-out;
-    }
-    @keyframes glow {
-      0%   { text-shadow: 0 0 10px var(--neon-purple); }
-      50%  { text-shadow: 0 0 30px var(--neon-purple); }
-      100% { text-shadow: 0 0 10px var(--neon-purple); }
-    }
-    
-    /****************************************************************
-     12) RESPONSIVE DESIGN
-    ****************************************************************/
-    @media (max-width: 768px) {
-      .dashboard-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-      }
-      .task-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .task-actions {
-        width: 100%;
-        justify-content: center;
-      }
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-      .reward-penalty {
-        flex-direction: column;
-        align-items: center;
-      }
-    }
-  </style>
+  <!-- Base Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <!-- Dashboard-Specific Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+  
+  <!-- Animate.css (for animations) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <!-- Canvas Confetti (for celebrations) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.5.1/confetti.browser.min.js"></script>
 </head>
 
 <body>
-  <div class="dashboard-wrapper">
-    <div class="cyber-grid"></div>
-    <div class="dashboard-container">
-      <!-- Dashboard Header -->
-      <header class="dashboard-header">
-        <div class="user-profile">
-          <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" class="user-avatar" alt="User Avatar">
-          <div>
-            <h1 id="usernameDisplay">{{ user.username }}</h1>
-            <p id="levelDisplay">Active Level: {{ current_level }} Cyber Agent</p>
-          </div>
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-text">Darken</span>
+    </div>
+    <ul class="sidebar-nav">
+      <li class="nav-item active">
+        <a href="#" class="nav-link">
+          <i class="nav-icon">&#128200;</i> <!-- Example icon (unicode) -->
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <i class="nav-icon">&#128202;</i>
+          <span>Analysis</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <i class="nav-icon">&#128196;</i>
+          <span>Reports</span>
+        </a>
+      </li>
+      <!-- Add more nav items as desired -->
+    </ul>
+  </aside>
+  
+  <!-- ========== MAIN CONTENT WRAPPER ========== -->
+  <div class="main-wrapper">
+    
+    <!-- ========== TOP NAVBAR ========== -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="search-bar">
+          <input type="text" placeholder="Search..." />
         </div>
-        <form method="POST" action="{{ url_for('auth.logout') }}">
+      </div>
+      <div class="topbar-right">
+        <div class="user-info">
+          <!-- You can show a user avatar or name here if you want -->
+          <span class="user-name">{{ user.username }}</span>
+          <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" alt="Avatar" class="topbar-avatar">
+        </div>
+        <button class="btn-logout" onclick="document.getElementById('logoutForm').submit();">
+          Logout
+        </button>
+        <form id="logoutForm" method="POST" action="{{ url_for('auth.logout') }}" style="display:none;">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="cyber-button">Logout</button>
         </form>
-      </header>
+      </div>
+    </header>
+    
+    <!-- ========== MAIN CONTENT AREA ========== -->
+    <div class="content-area">
+      <!-- Page Header / Title -->
+      <div class="page-heading">
+        <h1>Dashboard</h1>
+        <p>Manage your progress, tasks, and daily streaks</p>
+      </div>
       
-      <!-- Stats Section -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <h3>XP Progress</h3>
-          <div class="xp-progress">
-            <div class="xp-fill" id="xpFill" style="width: {{ xp_percentage }}%;"></div>
+      <!-- Quick Stats Cards -->
+      <div class="stats-row">
+        <!-- XP Progress Card -->
+        <div class="stats-card">
+          <div class="stats-card-header">
+            <h3>XP Progress</h3>
           </div>
-          <p id="xpText">{{ profile.xp }} / {{ next_level_xp }} XP</p>
-          <button class="cyber-button" id="addXpBtn">+50 XP</button>
+          <div class="stats-card-body">
+            <div class="xp-progress">
+              <div class="xp-fill" id="xpFill" style="width: {{ xp_percentage }}%;"></div>
+            </div>
+            <p id="xpText">{{ profile.xp }} / {{ next_level_xp }} XP</p>
+            <button class="btn-darken" id="addXpBtn">+50 XP</button>
+          </div>
         </div>
-        <div class="stat-card">
-          <h3>Daily Streak</h3>
-          <p class="glowing-text">{{ profile.streak }} Days 🔥</p>
+        <!-- Daily Streak Card -->
+        <div class="stats-card">
+          <div class="stats-card-header">
+            <h3>Daily Streak</h3>
+          </div>
+          <div class="stats-card-body">
+            <p id="streakDisplay" class="streak-text">{{ profile.streak }} Days 🔥</p>
+          </div>
         </div>
       </div>
       
-      <!-- Tasks Section -->
+      <!-- ========== USER PROFILE & SETTINGS BUTTON ========== -->
+      <div class="user-panel">
+        <div class="user-panel-left">
+          <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" class="profile-avatar" alt="User Avatar">
+          <div>
+            <h2 id="usernameDisplay">{{ user.username }}</h2>
+            <p id="levelDisplay">Active Level: {{ current_level }} Cyber Agent</p>
+          </div>
+        </div>
+        <div class="user-panel-right">
+          <button class="btn-darken" id="openSettingsBtn">Settings</button>
+        </div>
+      </div>
+      
+      <!-- ========== TASKS SECTION ========== -->
       <section class="tasks-section">
-        <div class="task-management">
-          <h2>Mission Objectives</h2>
-          <form id="task-form" class="task-form">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <input type="text" name="task" placeholder="New objective..." required>
-            <button type="submit" class="cyber-button">Add Task</button>
-            <button type="button" id="random-task" class="cyber-button">🎲 Random Task</button>
-          </form>
-          <ul class="task-list" id="task-list">
-            {% for task in tasks %}
-            <li class="task-item {% if task.completed %}completed{% endif %}" data-task-id="{{ task.id }}">
-              <span class="task-desc">{{ task.description }}</span>
-              <div class="task-actions">
-                {% if not task.completed %}
-                <button class="cyber-button complete-btn" data-task-id="{{ task.id }}">Complete</button>
-                {% else %}
-                <span class="completed-label">Completed</span>
-                {% endif %}
-                <button class="cyber-button delete-btn" data-task-id="{{ task.id }}">❌ Delete</button>
-              </div>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </section>
-      
-      <!-- Reward & Penalty Section -->
-      <section class="reward-penalty">
-        <div class="reward">
-          <h3>Today's Reward</h3>
-          <p id="reward-text">{{ reward }}</p>
-        </div>
-        <div class="penalty">
-          <h3>Penalty if Failed</h3>
-          <p id="penalty-text">{{ penalty }}</p>
-        </div>
-      </section>
-      
-      <!-- Footer -->
-      <footer>
-        <form method="POST" action="{{ url_for('auth.logout') }}">
+        <h2>Mission Objectives</h2>
+        <form id="task-form" class="task-form">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn">Logout</button>
+          <input type="text" name="task" placeholder="New objective..." required />
+          <button type="submit" class="btn-darken">Add Task</button>
+          <button type="button" id="random-task" class="btn-darken">🎲 Random Task</button>
         </form>
-        <p class="back-link"><a href="{{ url_for('home') }}">Return to Home</a></p>
+        <ul class="task-list" id="task-list">
+          {% for task in tasks %}
+          <li class="task-item {% if task.completed %}completed{% endif %}" data-task-id="{{ task.id }}">
+            <span class="task-desc">{{ task.description }}</span>
+            <div class="task-actions">
+              {% if not task.completed %}
+              <button class="btn-darken complete-btn" data-task-id="{{ task.id }}">Complete</button>
+              {% else %}
+              <span class="completed-label">Completed</span>
+              {% endif %}
+              <button class="btn-darken delete-btn" data-task-id="{{ task.id }}">Delete</button>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        <button class="btn-darken clear-tasks-button" id="clearCompletedBtn">Clear Completed Tasks</button>
+      </section>
+      
+      <!-- ========== REWARD & PENALTY SECTION ========== -->
+      <section class="reward-penalty-row">
+        <div class="reward-box">
+          <h3>Today's Reward</h3>
+          <p id="reward-text">{{ reward if reward is defined else 'Keep pushing!' }}</p>
+        </div>
+        <div class="penalty-box">
+          <h3>Penalty if Failed</h3>
+          <p id="penalty-text">{{ penalty if penalty is defined else 'Try again tomorrow!' }}</p>
+        </div>
+      </section>
+      
+      <!-- ========== FOOTER ========== -->
+      <footer class="darken-footer">
+        <p>&copy; 2025 Darken Dashboard. All rights reserved.</p>
       </footer>
     </div>
   </div>
   
+  <!-- ========== SETTINGS MODAL ========== -->
+  <div id="settingsModal" class="darken-modal">
+    <div class="modal-content">
+      <span class="close" id="closeSettingsBtn">&times;</span>
+      <h2>Account Settings</h2>
+      <form method="POST" action="{{ url_for('auth.settings') }}" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" value="{{ user.username }}" required />
+        
+        <label for="new_password">New Password</label>
+        <input type="password" id="new_password" name="new_password" placeholder="Enter new password" />
+        
+        <label for="confirm_password">Confirm New Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password" />
+        
+        <label for="photo">Profile Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/*" />
+        
+        <button type="submit" class="btn-darken">Update Settings</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- ========== SCRIPTS ========== -->
   <script>
-    // Example JavaScript for XP system, tasks, etc.
+    // Modal Logic
+    const settingsModal = document.getElementById('settingsModal');
+    const openSettingsBtn = document.getElementById('openSettingsBtn');
+    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+    
+    openSettingsBtn.addEventListener('click', () => {
+      settingsModal.style.display = 'block';
+    });
+    closeSettingsBtn.addEventListener('click', () => {
+      settingsModal.style.display = 'none';
+    });
+    window.addEventListener('click', (e) => {
+      if (e.target === settingsModal) {
+        settingsModal.style.display = 'none';
+      }
+    });
+    
+    // XP & Tasks Logic
     document.addEventListener('DOMContentLoaded', function() {
       const xpFill = document.getElementById('xpFill');
       const xpText = document.getElementById('xpText');
@@ -479,16 +219,15 @@
       const addXpBtn = document.getElementById('addXpBtn');
       const taskForm = document.getElementById('task-form');
       const taskList = document.getElementById('task-list');
+      const clearCompletedBtn = document.getElementById('clearCompletedBtn');
+      const streakDisplay = document.getElementById('streakDisplay');
       
-      // Initialize from server variables
       let currentXP = {{ profile.xp }};
       let currentLevel = {{ current_level }};
       
-      // Helper to get threshold for a given level
       function getThreshold(level) {
         return Math.floor(100 * Math.pow(1.5, level - 1));
       }
-      // Helper to get total XP required up to a given level
       function getTotalXPForLevel(level) {
         let sum = 0;
         for (let i = 1; i < level; i++) {
@@ -496,7 +235,6 @@
         }
         return sum;
       }
-      // Update XP bar & text
       function updateXPUI() {
         const baseXP = getTotalXPForLevel(currentLevel);
         const threshold = getThreshold(currentLevel);
@@ -506,7 +244,6 @@
         xpText.textContent = `Level ${currentLevel}: ${xpInLevel} / ${threshold} XP`;
         levelDisplay.textContent = `Active Level: ${currentLevel} Cyber Agent`;
       }
-      // Confetti effect
       function triggerConfetti() {
         confetti({
           particleCount: 100,
@@ -514,7 +251,6 @@
           origin: { y: 0.6 }
         });
       }
-      // Add XP by calling a backend endpoint
       function addXP(amount) {
         fetch('/update_xp', {
           method: 'POST',
@@ -542,10 +278,9 @@
           }
         });
       }
-      // Button to add XP
       addXpBtn.addEventListener('click', () => addXP(50));
       
-      // Add new task
+      // Create new task
       taskForm.addEventListener('submit', async e => {
         e.preventDefault();
         const input = taskForm.querySelector('input[name="task"]');
@@ -568,8 +303,8 @@
           li.innerHTML = `
             <span class="task-desc">${task.description}</span>
             <div class="task-actions">
-              <button class="cyber-button complete-btn" data-task-id="${task.id}">Complete</button>
-              <button class="cyber-button delete-btn" data-task-id="${task.id}">❌ Delete</button>
+              <button class="btn-darken complete-btn" data-task-id="${task.id}">Complete</button>
+              <button class="btn-darken delete-btn" data-task-id="${task.id}">Delete</button>
             </div>
           `;
           taskList.appendChild(li);
@@ -577,41 +312,39 @@
         }
       });
       
-      // Task completion / deletion
+      // Complete / Delete tasks
       taskList.addEventListener('click', async e => {
         const taskItem = e.target.closest('.task-item');
         if (!taskItem) return;
         const taskId = taskItem.dataset.taskId;
         
         if (e.target.classList.contains('delete-btn')) {
-          // Delete
           await fetch(`/tasks/${taskId}`, {
             method: 'DELETE',
             headers: { 'X-CSRFToken': '{{ csrf_token() }}' }
           });
           taskItem.remove();
         } else if (e.target.classList.contains('complete-btn')) {
-          // Complete
           const res = await fetch(`/tasks/${taskId}`, {
             method: 'PATCH',
             headers: { 'X-CSRFToken': '{{ csrf_token() }}' }
           });
           if (res.ok) {
             const data = await res.json();
-            // Mark visually completed
             taskItem.classList.add('completed');
             taskItem.innerHTML = `
               <span class="task-desc">${taskItem.querySelector('.task-desc').textContent}</span>
               <div class="task-actions">
                 <span class="completed-label">Completed</span>
-                <button class="cyber-button delete-btn" data-task-id="${taskId}">❌ Delete</button>
+                <button class="btn-darken delete-btn" data-task-id="${taskId}">Delete</button>
               </div>
             `;
-            // Update XP UI
             currentXP = data.total_xp;
-            const oldLevel = currentLevel;
             currentLevel = data.current_level;
             updateXPUI();
+            if (data.streak !== undefined) {
+              streakDisplay.textContent = data.streak + " Days 🔥";
+            }
             xpFill.classList.add('animate__animated', 'animate__pulse');
             xpFill.addEventListener('animationend', () => {
               xpFill.classList.remove('animate__animated', 'animate__pulse');
@@ -623,6 +356,18 @@
               alert(`Congratulations! Level ${currentLevel} Achieved!`);
             }
           }
+        }
+      });
+      
+      // Clear Completed Tasks
+      clearCompletedBtn.addEventListener('click', async () => {
+        const response = await fetch('/delete_completed_tasks', {
+          method: 'POST',
+          headers: { 'X-CSRFToken': '{{ csrf_token() }}' }
+        });
+        if (response.ok) {
+          document.querySelectorAll('.task-item.completed').forEach(item => item.remove());
+          alert('Completed tasks cleared.');
         }
       });
       
@@ -639,7 +384,7 @@
         taskForm.querySelector('input[name="task"]').value = randomTask;
       });
       
-      // Initialize UI
+      // Initialize XP UI
       updateXPUI();
     });
   </script>

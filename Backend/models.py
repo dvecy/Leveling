@@ -4,12 +4,14 @@ from flask_login import UserMixin
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(150), unique=True, nullable=False)
+    username = db.Column(db.String(100), nullable=False, unique=True, index=True)
+    email = db.Column(db.String(150), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(200), nullable=False)
-    profile_photo = db.Column(db.String(255), default='default.png')
+    profile_photo = db.Column(db.String(255), default='default_avatar.png')
     registered_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_admin = db.Column(db.Boolean, default=False)
+
+    # Relationship: each User has a single UserProfile
     profile = db.relationship('UserProfile', backref='user', uselist=False)
 
 class UserProfile(db.Model):
@@ -18,11 +20,10 @@ class UserProfile(db.Model):
     level = db.Column(db.Integer, default=1)
     xp = db.Column(db.Integer, default=0)
     streak = db.Column(db.Integer, default=0)
-    next_level_xp = db.Column(db.Integer, default=100)
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(200), nullable=False)
     xp = db.Column(db.Integer, default=20)
     completed = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)

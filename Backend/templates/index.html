@@ -1,32 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Life Leveling</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lev8ora - Welcome</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS for index page -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Welcome to <span class="highlight">Real-Life Leveling</span></h1>
-            <p class="subtitle">Level up your life, track your progress, and achieve greatness.</p>
-        </header>
-
-        <div class="content">
-            {% if current_user.is_authenticated %}
-                <h2>Hello, {{ current_user.username }}! 🎉</h2>
-                <p>Start leveling up your life today. Track your progress, set goals, and achieve more.</p>
-                <a href="{{ url_for('dashboard') }}" class="btn">Go to Dashboard</a>
-                <a href="{{ url_for('auth.logout') }}" class="btn logout">Logout</a>
-            {% else %}
-                <h2>Ready to start your journey?</h2>
-                <p>Join our community and take control of your personal growth.</p>
-                <a href="{{ url_for('auth.login') }}" class="btn">Login</a>
-                <a href="{{ url_for('auth.register') }}" class="btn register">Register</a>
-            {% endif %}
-        </div>
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="logo">
+        <h1>Lev8ora</h1>
+      </div>
+      <nav class="nav-menu">
+        <ul>
+          <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+          <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h2 class="hero-title">Welcome to Lev8ora</h2>
+      <p class="hero-subtitle">Elevate your life with engaging challenges and smart tracking</p>
+      <a href="{{ url_for('auth.register') }}" class="hero-btn">Join Now</a>
+    </div>
+  </section>
+  
+  <!-- Features Section -->
+  <section class="features">
+    <div class="feature-container">
+      <div class="feature-item">
+        <h3>Innovative Challenges</h3>
+        <p>Boost your growth by completing daily missions and leveling up.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Advanced Analytics</h3>
+        <p>Track your XP, daily streaks, and progress with intuitive graphs.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Custom Experience</h3>
+        <p>Personalize your journey with customizable settings and rewards.</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2025 Lev8ora. All rights reserved.</p>
+  </footer>
+  
+  <script>
+    // Optional JavaScript animations or interactions can be added here.
+  </script>
 </body>
 </html>

@@ -4,12 +4,25 @@ from werkzeug.utils import secure_filename
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
-from datetime import datetime
 import os
-from extensions import db, mail, csrf
+from datetime import datetime
+from extensions import db, mail
 from models import User, UserProfile
+import re
 
 auth = Blueprint('auth', __name__)
+
+def validate_password(password):
+    """Ensure password meets security requirements."""
+    if len(password) < 8:
+        return False
+    if not re.search(r"[A-Z]", password):
+        return False
+    if not re.search(r"[a-z]", password):
+        return False
+    if not re.search(r"[0-9]", password):
+        return False
+    return True
 
 def get_serializer():
     """Create a URL-safe serializer for token generation."""
@@ -17,8 +30,7 @@ def get_serializer():
 
 def allowed_file(filename):
     """Check if a file has an allowed extension."""
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -27,6 +39,11 @@ def register():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
+
+        # Validate password strength before hashing
+        if not validate_password(password):
+            flash('Password must be at least 8 characters and include uppercase, lowercase, and a number.', 'error')
+            return redirect(url_for('auth.register'))
 
         # Check if user already exists
         existing_user = User.query.filter_by(email=email).first()
@@ -80,36 +97,53 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('auth.login'))
 
-@auth.route('/profile', methods=['GET', 'POST'])
+@auth.route('/settings', methods=['GET', 'POST'])
 @login_required
-def profile():
-    """Handle user profile updates."""
-    if request.method == 'POST' and 'photo' in request.files:
-        file = request.files['photo']
-        if file and allowed_file(file.filename):
-            # Save new profile photo
-            filename = secure_filename(
-                f"user_{current_user.id}_{datetime.now().timestamp()}.{file.filename.rsplit('.', 1)[1].lower()}"
-            )
-            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
+def settings():
+    """Handle user settings updates: profile photo, username, and password."""
+    if request.method == 'POST':
+        # Update username if provided
+        new_username = request.form.get('username')
+        if new_username and new_username != current_user.username:
+            current_user.username = new_username
 
-            # Remove old profile photo if it exists
-            if current_user.profile_photo != 'default_avatar.png':
-                old_path = os.path.join(current_app.config['UPLOAD_FOLDER'], current_user.profile_photo)
-                if os.path.exists(old_path):
-                    os.remove(old_path)
+        # Update password if provided
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        if new_password:
+            if new_password != confirm_password:
+                flash('Passwords do not match.', 'error')
+                return redirect(url_for('auth.settings'))
+            if not validate_password(new_password):
+                flash('New password must be at least 8 characters and include uppercase, lowercase, and a number.', 'error')
+                return redirect(url_for('auth.settings'))
+            current_user.password_hash = generate_password_hash(new_password, method='pbkdf2:sha256')
 
-            # Update user profile photo
-            current_user.profile_photo = filename
-            db.session.commit()
-            flash('Profile photo updated!', 'success')
-        else:
-            flash('Invalid file type. Allowed: PNG, JPG, JPEG, GIF', 'error')
-        
-        return redirect(url_for('auth.profile'))
-    
-    return render_template('profile.html')
+        # Update profile photo only if a file is selected
+        file = request.files.get('photo')
+        if file and file.filename != '':
+            if allowed_file(file.filename):
+                filename = secure_filename(
+                    f"user_{current_user.id}_{datetime.now().timestamp()}.{file.filename.rsplit('.', 1)[1].lower()}"
+                )
+                filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+
+                # Remove old profile photo if not default
+                if current_user.profile_photo != 'default_avatar.png':
+                    old_path = os.path.join(current_app.config['UPLOAD_FOLDER'], current_user.profile_photo)
+                    if os.path.exists(old_path):
+                        os.remove(old_path)
+                current_user.profile_photo = filename
+            else:
+                flash('Invalid file type for profile photo.', 'error')
+                return redirect(url_for('auth.settings'))
+
+        db.session.commit()
+        flash('Settings updated successfully!', 'success')
+        return redirect(url_for('dashboard'))
+
+    return render_template('settings.html', user=current_user)
 
 @auth.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -140,7 +174,7 @@ def send_reset_email(user):
 
     msg = Message(
         "Password Reset Request",
-        sender=current_app.config['MAIL_DEFAULT_SENDER'],
+        sender=current_app.config.get('MAIL_DEFAULT_SENDER', 'noreply@example.com'),
         recipients=[user.email]
     )
     msg.body = f'''To reset your password, visit:
@@ -170,6 +204,9 @@ def reset_password(token):
 
     if request.method == 'POST':
         new_password = request.form.get('password')
+        if not validate_password(new_password):
+            flash('Password must be at least 8 characters and include uppercase, lowercase, and a number.', 'error')
+            return redirect(url_for('auth.reset_password', token=token))
         user.password_hash = generate_password_hash(new_password, method='pbkdf2:sha256')
         db.session.commit()
         flash('Your password has been updated!', 'success')

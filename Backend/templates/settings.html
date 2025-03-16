@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings - CyberLevel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+    .settings-container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-top: 10px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="file"] {
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      border: none;
+      background: #00aaff;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #00aaff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <h1>Account Settings</h1>
+    <form method="POST" action="{{ url_for('auth.settings') }}" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" value="{{ user.username }}" required>
+      <label for="new_password">New Password</label>
+      <input type="password" id="new_password" name="new_password" placeholder="Enter new password">
+      <label for="confirm_password">Confirm New Password</label>
+      <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
+      <label for="photo">Profile Photo</label>
+      <input type="file" id="photo" name="photo" accept="image/*">
+      <button type="submit">Update Settings</button>
+    </form>
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </div>
+</body>
+</html>

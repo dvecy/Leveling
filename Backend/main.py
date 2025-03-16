@@ -1,5 +1,5 @@
-from flask import Flask, render_template, jsonify, request
-from flask_login import LoginManager, login_required, current_user
+from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
+from flask_login import login_required, current_user
 from extensions import db, mail, login_manager, csrf
 from config import Config
 from models import User, Task
@@ -21,7 +21,7 @@ def create_app():
     def load_user(user_id):
         return db.session.get(User, int(user_id))
     
-    # Register blueprints
+    # Register auth blueprint
     from routes.auth import auth
     app.register_blueprint(auth, url_prefix='/auth')
     
@@ -35,7 +35,7 @@ def create_app():
         profile = current_user.profile
         tasks = Task.query.filter_by(user_id=current_user.id).all()
         
-        # Progressive level calculation: level starts at 1, first level requires 100 XP, then increases by 50% each level.
+        # Calculate progressive level
         def calculate_level_progress(xp):
             level = 1
             required_xp = 100
@@ -43,10 +43,10 @@ def create_app():
                 xp -= required_xp
                 level += 1
                 required_xp = math.floor(required_xp * 1.5)
-            return level, required_xp, xp  # current level, threshold for current level, XP earned in current level
+            return level, required_xp, xp
         
         current_level, next_level_xp, current_level_xp = calculate_level_progress(profile.xp)
-        xp_percentage = (current_level_xp / next_level_xp) * 100
+        xp_percentage = (current_level_xp / next_level_xp) * 100 if next_level_xp > 0 else 100
         
         return render_template('dashboard.html',
             user=current_user,
@@ -87,7 +87,7 @@ def create_app():
                 task.completed = True
                 current_user.profile.xp += task.xp
                 
-                # Progressive level calculation
+                # Recalculate level
                 def calculate_level(xp):
                     level = 1
                     required_xp = 100
@@ -118,7 +118,6 @@ def create_app():
         amount = request.json.get('amount', 0)
         current_user.profile.xp += amount
         
-        # Progressive level calculation
         def calculate_level(xp):
             level = 1
             required_xp = 100
@@ -140,6 +139,16 @@ def create_app():
             'next_level_xp': next_xp,
             'level_up': level_up
         })
+    
+    @app.route('/delete_completed_tasks', methods=['POST'])
+    @login_required
+    def delete_completed_tasks():
+        completed_tasks = Task.query.filter_by(user_id=current_user.id, completed=True).all()
+        for t in completed_tasks:
+            db.session.delete(t)
+        db.session.commit()
+        flash('Completed tasks have been deleted.', 'success')
+        return jsonify({'message': 'Completed tasks deleted'}), 200
     
     return app
 
