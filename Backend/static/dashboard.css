@@ -1,392 +1,394 @@
 /* ==========================================================================
-   DASHBOARD LAYOUT - DESKTOP FIRST
-   ========================================================================== */
+       DASHBOARD LAYOUT - DESKTOP FIRST
+       ========================================================================== */
 
-/* Sidebar */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 230px;
-    height: 100%;
-    background: #1e1e2f;
-    padding: 1rem;
-    overflow-y: auto;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.4);
-    z-index: 999;
-  }
-  .sidebar-brand {
-    padding: 1rem 0;
-    text-align: center;
-  }
-  .brand-text {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #fff;
-  }
-  .sidebar-nav {
-    list-style: none;
-    margin-top: 1rem;
-  }
-  .sidebar-nav .nav-item {
-    margin-bottom: 0.8rem;
-  }
-  .sidebar-nav .nav-item.active > .nav-link {
-    background: #2e2e4f;
-  }
-  .nav-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.65rem 1rem;
-    color: #bbb;
-    border-radius: 4px;
-    transition: 0.3s;
-  }
-  .nav-link:hover {
-    background: #2e2e4f;
-    color: #fff;
-  }
-  .nav-icon {
-    font-size: 1.2rem;
-  }
-  
-  /* Main Wrapper (offset sidebar width) */
-  .main-wrapper {
-    margin-left: 230px;
-    min-height: 100vh;
-    background: #0d0d1a; /* fallback background */
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Minimal topbar (optional or empty) */
-  .topbar {
-    width: 100%;
-    background: #1f1f2f;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  }
-  .btn-logout {
-    background: linear-gradient(45deg, #f43f5e, #be123c);
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    transition: 0.3s;
-  }
-  .btn-logout:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-  }
-  
-  /* Content Area */
-  .content-area {
-    flex: 1;
-    padding: 1.5rem;
-    background: #0d0d1a;
-    color: #e6e6ff;
-  }
-  
-  /* Page Heading */
-  .page-heading {
-    margin-bottom: 1.5rem;
-  }
-  .page-heading h1 {
-    font-size: 1.8rem;
-    margin-bottom: 0.3rem;
-    color: #fff;
-  }
-  .page-heading p {
-    font-size: 0.9rem;
-    color: #bbb;
-  }
-  
-  /* User Panel (Profile + Level) */
-  .user-panel {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    background: #1a1a33;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  }
-  .user-panel-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .profile-avatar {
-    width: 64px;
-    height: 64px;
-    border: 2px solid #00f3ff;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  /* Stats Row */
-  .stats-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  .stats-card {
-    flex: 1;
-    min-width: 240px;
-    background: #1a1a33;
-    border-radius: 8px;
-    padding: 1rem;
-    color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  }
-  .stats-card-header h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
-    color: #00f3ff;
-  }
-  .stats-card-body {
-    /* Additional content styling */
-  }
-  .xp-progress {
-    position: relative;
-    width: 100%;
-    height: 14px;
-    background: #2e2e4f;
-    border-radius: 7px;
-    margin-bottom: 0.5rem;
-  }
-  .xp-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #00f3ff, #bc13fe);
-    border-radius: 7px;
-    transition: width 0.3s ease;
-  }
-  .streak-text {
-    font-size: 1.4rem;
-    color: #fff;
-  }
-  
-  /* Tasks Section */
-  .tasks-section {
-    background: #1a1a33;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  }
-  .tasks-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #00f3ff;
-  }
-  .task-form {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-  }
-  .task-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-  .task-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #2e2e4f;
-    padding: 0.8rem;
-    border-radius: 5px;
-    border-left: 4px solid #00f3ff;
-    transition: background 0.3s;
-  }
-  .task-item:hover {
-    background: #3e3e5f;
-  }
-  .task-item.completed {
-    opacity: 0.6;
-    border-left-color: #bc13fe;
-    text-decoration: line-through;
-  }
-  .task-desc {
-    flex-grow: 1;
-    font-size: 1rem;
-  }
-  .task-actions {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  /* Reward & Penalty Section */
-  .reward-penalty-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  .reward-box,
-  .penalty-box {
-    flex: 1;
-    min-width: 240px;
-    background: #1a1a33;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    text-align: center;
-  }
-  .reward-box:hover,
-  .penalty-box:hover {
-    transform: translateY(-3px);
-  }
-  .reward-box h3,
-  .penalty-box h3 {
-    font-size: 1.2rem;
-    color: #00f3ff;
-    margin-bottom: 0.5rem;
-  }
-  
-  /* Footer */
-  .lev8ora-footer {
-    text-align: center;
-    padding: 1rem;
-    background: #1a1a33;
-    border-radius: 8px;
-    color: #bbb;
-    font-size: 0.9rem;
-  }
-  
-  /* Modal (Settings) */
-  .lev8ora-modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.6);
-  }
-  .lev8ora-modal .modal-content {
-    background: #1f1f2f;
-    margin: 5% auto;
-    padding: 2rem;
-    border: 1px solid #444;
-    width: 90%;
-    max-width: 480px;
-    border-radius: 8px;
-    position: relative;
-    color: #fff;
-  }
-  .lev8ora-modal .close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    color: #999;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  .lev8ora-modal .close:hover {
-    color: #fff;
-  }
-  .lev8ora-modal label {
-    margin-top: 1rem;
-  }
-  .lev8ora-modal button[type="submit"] {
-    margin-top: 1rem;
-    width: 100%;
-  }
-  
-  /* ==========================================================================
-     RESPONSIVE ADJUSTMENTS
-     ========================================================================== */
-  
-  /* For tablets and small desktops */
-  @media (max-width: 992px) {
+    /* Sidebar */
     .sidebar {
-      width: 200px;
-    }
-    .main-wrapper {
-      margin-left: 200px;
-    }
-  }
-  
-  /* For mobile devices (below 768px) */
-  @media (max-width: 768px) {
-    /* Sidebar becomes top block, not fixed left */
-    .sidebar {
-      position: static;
-      width: 100%;
-      height: auto;
-      display: block;
-      box-shadow: none;
-      border-bottom: 1px solid #333;
-      margin-bottom: 1rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 230px;
+        height: 100%;
+        background: #1e1e2f;
+        padding: 1rem;
+        overflow-y: auto;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.4);
+        z-index: 999;
+        transition: 0.3s;
     }
     .sidebar-brand {
-      text-align: center;
-      margin-bottom: 0.5rem;
+        padding: 1rem 0;
+        text-align: center;
+    }
+    .brand-text {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #fff;
     }
     .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      align-items: center;
-      margin-top: 0.5rem;
+        list-style: none;
+        margin-top: 1rem;
     }
-    .nav-item {
-      margin-bottom: 0;
-      width: 100%;
+    .sidebar-nav .nav-item {
+        margin-bottom: 0.8rem;
+    }
+    .sidebar-nav .nav-item.active > .nav-link {
+        background: #2e2e4f;
     }
     .nav-link {
-      width: 100%;
-      text-align: center;
-      justify-content: center;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1rem;
+        color: #bbb;
+        border-radius: 4px;
+        transition: 0.3s;
     }
-    .main-wrapper {
-      margin-left: 0;
-    }
-    .user-panel {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    .stats-row {
-      flex-direction: column;
-      align-items: center;
-    }
-    .reward-penalty-row {
-      flex-direction: column;
-      align-items: center;
-    }
-  }
-  
-  /* For very small mobile screens (below 480px) */
-  @media (max-width: 480px) {
-    .profile-avatar {
-      width: 48px;
-      height: 48px;
-    }
-    .stats-card {
-      padding: 0.8rem;
-      min-width: 200px;
-    }
-    .task-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .task-desc {
-      margin-bottom: 0.5rem;
+    .nav-link:hover {
+        background: #2e2e4f;
+        color: #fff;
     }
     .nav-icon {
-      font-size: 1rem;
+        font-size: 1.2rem;
     }
-  }
-  
+
+    /* Main Wrapper (offset sidebar width) */
+    .main-wrapper {
+        margin-left: 230px;
+        min-height: 100vh;
+        background: #0d0d1a;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s;
+    }
+
+    /* Minimal topbar (optional) */
+    .topbar {
+        width: 100%;
+        background: #1f1f2f;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .btn-logout {
+        background: linear-gradient(45deg, #f43f5e, #be123c);
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+    .btn-logout:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+    }
+
+    /* Content Area */
+    .content-area {
+        flex: 1;
+        padding: 1.5rem;
+        background: #0d0d1a;
+        color: #e6e6ff;
+    }
+
+    /* Page Heading */
+    .page-heading {
+        margin-bottom: 1.5rem;
+    }
+    .page-heading h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.3rem;
+        color: #fff;
+    }
+    .page-heading p {
+        font-size: 0.9rem;
+        color: #bbb;
+    }
+
+    /* User Panel (Profile + Level) */
+    .user-panel {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        background: #1a1a33;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .user-panel-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .profile-avatar {
+        width: 64px;
+        height: 64px;
+        border: 2px solid #00f3ff;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    /* Stats Row */
+    .stats-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .stats-card {
+        flex: 1;
+        min-width: 240px;
+        background: #1a1a33;
+        border-radius: 8px;
+        padding: 1rem;
+        color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .stats-card-header h3 {
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        color: #00f3ff;
+    }
+    .stats-card-body {
+        /* Additional content styling */
+    }
+    .xp-progress {
+        position: relative;
+        width: 100%;
+        height: 14px;
+        background: #2e2e4f;
+        border-radius: 7px;
+        margin-bottom: 0.5rem;
+    }
+    .xp-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #00f3ff, #bc13fe);
+        border-radius: 7px;
+        transition: width 0.3s ease;
+    }
+    .streak-text {
+        font-size: 1.4rem;
+        color: #fff;
+    }
+
+    /* Tasks Section */
+    .tasks-section {
+        background: #1a1a33;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .tasks-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #00f3ff;
+    }
+    .task-form {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+    .task-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+    .task-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #2e2e4f;
+        padding: 0.8rem;
+        border-radius: 5px;
+        border-left: 4px solid #00f3ff;
+        transition: background 0.3s;
+    }
+    .task-item:hover {
+        background: #3e3e5f;
+    }
+    .task-item.completed {
+        opacity: 0.6;
+        border-left-color: #bc13fe;
+        text-decoration: line-through;
+    }
+    .task-desc {
+        flex-grow: 1;
+        font-size: 1rem;
+    }
+    .task-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .clear-tasks-button {
+        margin-top: 0.5rem;
+    }
+
+    /* Reward & Penalty Section */
+    .reward-penalty-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .reward-box,
+    .penalty-box {
+        flex: 1;
+        min-width: 240px;
+        background: #1a1a33;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+    .reward-box:hover,
+    .penalty-box:hover {
+        transform: translateY(-3px);
+    }
+    .reward-box h3,
+    .penalty-box h3 {
+        font-size: 1.2rem;
+        color: #00f3ff;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Footer */
+    .lev8ora-footer {
+        text-align: center;
+        padding: 1rem;
+        background: #1a1a33;
+        border-radius: 8px;
+        color: #bbb;
+        font-size: 0.9rem;
+    }
+
+    /* Modal (Settings) */
+    .lev8ora-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+    .lev8ora-modal .modal-content {
+        background: #1f1f2f;
+        margin: 5% auto;
+        padding: 2rem;
+        border: 1px solid #444;
+        width: 90%;
+        max-width: 480px;
+        border-radius: 8px;
+        position: relative;
+        color: #fff;
+    }
+    .lev8ora-modal .close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: #999;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .lev8ora-modal .close:hover {
+        color: #fff;
+    }
+    .lev8ora-modal label {
+        margin-top: 1rem;
+    }
+    .lev8ora-modal button[type="submit"] {
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    /* Hamburger Menu */
+    .hamburger {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1000;
+        background: #2e2e4f;
+        border: none;
+        border-radius: 4px;
+        padding: 0.5rem;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background: #fff;
+        margin: 4px 0;
+        border-radius: 2px;
+        transition: 0.3s;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .sidebar {
+            width: 200px;
+        }
+        .main-wrapper {
+            margin-left: 200px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hamburger {
+            display: block;
+        }
+        .sidebar {
+            left: -230px;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+        .main-wrapper {
+            margin-left: 0;
+        }
+        .user-panel {
+            margin-top: 3rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-avatar {
+            width: 48px;
+            height: 48px;
+        }
+        .stats-card {
+            padding: 0.8rem;
+            min-width: 200px;
+        }
+        .task-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .task-desc {
+            margin-bottom: 0.5rem;
+        }
+        .nav-icon {
+            font-size: 1rem;
+        }
+    }

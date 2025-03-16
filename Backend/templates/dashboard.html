@@ -18,15 +18,25 @@
   <!-- Canvas Confetti (for celebrations) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.5.1/confetti.browser.min.js"></script>
 </head>
-
 <body>
-  <!-- ========== SIDEBAR ========== -->
-  <aside class="sidebar">
+  <!-- TOPBAR with hamburger menu -->
+  <header class="topbar" style="justify-content: space-between;">
+    <button class="hamburger" id="hamburgerBtn">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+  
+  <!-- SIDEBAR OVERLAY (for mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <span class="brand-text">Lev8ora</span>
     </div>
     <ul class="sidebar-nav">
-      <!-- Order: Analysis, Reports, Dashboard, then Settings, then Logout -->
       <li class="nav-item">
         <a href="#" class="nav-link">
           <i class="nav-icon">📊</i>
@@ -45,14 +55,18 @@
           <span>Dashboard</span>
         </a>
       </li>
-      <!-- Settings opens the modal -->
+      <li class="nav-item">
+        <a href="#" class="nav-link" id="sidebarQuestsLink">
+          <i class="nav-icon">📝</i>
+          <span>Quests</span>
+        </a>
+      </li>
       <li class="nav-item">
         <a href="#" class="nav-link" id="sidebarSettingsLink">
           <i class="nav-icon">⚙️</i>
           <span>Settings</span>
         </a>
       </li>
-      <!-- Logout button below Settings -->
       <li class="nav-item">
         <form id="logoutForm" method="POST" action="{{ url_for('auth.logout') }}">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -65,32 +79,28 @@
     </ul>
   </aside>
   
-  <!-- ========== MAIN WRAPPER ========== -->
+  <!-- MAIN WRAPPER -->
   <div class="main-wrapper">
-    <!-- (No topbar, or keep it minimal/empty if you want) -->
-    
-    <!-- ========== MAIN CONTENT AREA ========== -->
+    <!-- MAIN CONTENT AREA -->
     <div class="content-area">
-      <!-- Page Header / Title -->
       <div class="page-heading">
         <h1>Dashboard</h1>
         <p>Manage your progress, tasks, and daily streaks</p>
       </div>
       
-      <!-- User Info (photo, name, level) under Dashboard heading -->
+      <!-- User Info: Profile photo, name, level & title -->
       <div class="user-panel" style="margin-bottom: 2rem;">
         <div class="user-panel-left">
           <img src="{{ url_for('auth.uploaded_file', filename=user.profile_photo) }}" class="profile-avatar" alt="User Avatar">
           <div>
             <h2 id="usernameDisplay">{{ user.username }}</h2>
-            <p id="levelDisplay">Active Level: {{ current_level }} Cyber Agent</p>
+            <p id="levelDisplay">Active Level: {{ current_level }} ({{ level_title }}) Cyber Agent</p>
           </div>
         </div>
       </div>
       
       <!-- Quick Stats Cards -->
       <div class="stats-row">
-        <!-- XP Progress Card -->
         <div class="stats-card">
           <div class="stats-card-header">
             <h3>XP Progress</h3>
@@ -103,7 +113,6 @@
             <button class="btn-darken" id="addXpBtn">+50 XP</button>
           </div>
         </div>
-        <!-- Daily Streak Card -->
         <div class="stats-card">
           <div class="stats-card-header">
             <h3>Daily Streak</h3>
@@ -114,7 +123,7 @@
         </div>
       </div>
       
-      <!-- ========== TASKS SECTION ========== -->
+      <!-- Tasks Section -->
       <section class="tasks-section">
         <h2>Mission Objectives</h2>
         <form id="task-form" class="task-form">
@@ -138,10 +147,10 @@
           </li>
           {% endfor %}
         </ul>
-        <button class="btn-darken clear-tasks-button" id="clearCompletedBtn">Clear Completed Tasks</button>
+        <button class="btn-darken clear-tasks-button" id="clearCompletedBtn" style="margin-top: 1rem;">Clear Completed Tasks</button>
       </section>
       
-      <!-- ========== REWARD & PENALTY SECTION ========== -->
+      <!-- Reward & Penalty Section -->
       <section class="reward-penalty-row">
         <div class="reward-box">
           <h3>Today's Reward</h3>
@@ -153,41 +162,63 @@
         </div>
       </section>
       
-      <!-- ========== FOOTER ========== -->
+      <!-- Footer -->
       <footer class="lev8ora-footer">
         <p>&copy; 2025 Lev8ora Dashboard. All rights reserved.</p>
       </footer>
     </div>
   </div>
   
-  <!-- ========== SETTINGS MODAL ========== -->
+  <!-- SETTINGS MODAL -->
   <div id="settingsModal" class="lev8ora-modal">
     <div class="modal-content">
       <span class="close" id="closeSettingsBtn">&times;</span>
       <h2>Account Settings</h2>
       <form method="POST" action="{{ url_for('auth.settings') }}" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        
         <label for="username">Username</label>
         <input type="text" id="username" name="username" value="{{ user.username }}" required />
-        
         <label for="new_password">New Password</label>
         <input type="password" id="new_password" name="new_password" placeholder="Enter new password" />
-        
         <label for="confirm_password">Confirm New Password</label>
         <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password" />
-        
         <label for="photo">Profile Photo</label>
         <input type="file" id="photo" name="photo" accept="image/*" />
-        
         <button type="submit" class="btn-darken">Update Settings</button>
       </form>
     </div>
   </div>
   
-  <!-- ========== DASHBOARD SCRIPTS ========== -->
+  <!-- QUESTS MODAL -->
+  <div id="questsModal" class="lev8ora-modal">
+    <div class="modal-content">
+      <span class="close" id="closeQuestsBtn">&times;</span>
+      <h2>Quests</h2>
+      <div class="quests-content">
+        <p>Complete 10 tasks today to earn 2x XP tomorrow!</p>
+        <p>Achieve a daily streak of 7 days to unlock a bonus reward!</p>
+        <p>Complete 50 tasks overall to become a Legend!</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- DASHBOARD SCRIPTS -->
   <script>
-    // Make the "Settings" link in the sidebar open the modal
+    // SIDEBAR TOGGLE
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    
+    hamburgerBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+    });
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarOverlay.style.display = 'none';
+    });
+    
+    // SETTINGS MODAL
     const sidebarSettingsLink = document.getElementById('sidebarSettingsLink');
     const settingsModal = document.getElementById('settingsModal');
     const closeSettingsBtn = document.getElementById('closeSettingsBtn');
@@ -195,6 +226,8 @@
     sidebarSettingsLink.addEventListener('click', (e) => {
       e.preventDefault();
       settingsModal.style.display = 'block';
+      sidebar.classList.remove('active');
+      sidebarOverlay.style.display = 'none';
     });
     closeSettingsBtn.addEventListener('click', () => {
       settingsModal.style.display = 'none';
@@ -204,6 +237,41 @@
         settingsModal.style.display = 'none';
       }
     });
+    
+    // QUESTS MODAL
+    const sidebarQuestsLink = document.getElementById('sidebarQuestsLink');
+    const questsModal = document.getElementById('questsModal');
+    const closeQuestsBtn = document.getElementById('closeQuestsBtn');
+    
+    sidebarQuestsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      questsModal.style.display = 'block';
+      sidebar.classList.remove('active');
+      sidebarOverlay.style.display = 'none';
+    });
+    closeQuestsBtn.addEventListener('click', () => {
+      questsModal.style.display = 'none';
+    });
+    window.addEventListener('click', (e) => {
+      if (e.target === questsModal) {
+        questsModal.style.display = 'none';
+      }
+    });
+    
+    // Client-side level title function
+    function getLevelTitle(level) {
+      if (level <= 10) return "Rookie";
+      else if (level <= 20) return "Apprentice";
+      else if (level <= 30) return "Adept";
+      else if (level <= 40) return "Specialist";
+      else if (level <= 50) return "Expert";
+      else if (level <= 60) return "Champion";
+      else if (level <= 70) return "Master";
+      else if (level <= 80) return "Grandmaster";
+      else if (level <= 90) return "Legend";
+      else if (level <= 100) return "Mythic";
+      else return "Transcendent";
+    }
     
     // XP & Tasks Logic
     document.addEventListener('DOMContentLoaded', function() {
@@ -236,7 +304,7 @@
         const xpPercentage = Math.min((xpInLevel / threshold) * 100, 100);
         xpFill.style.width = xpPercentage + '%';
         xpText.textContent = `Level ${currentLevel}: ${xpInLevel} / ${threshold} XP`;
-        levelDisplay.textContent = `Active Level: ${currentLevel} Cyber Agent`;
+        levelDisplay.textContent = `Active Level: ${currentLevel} (${getLevelTitle(currentLevel)}) Cyber Agent`;
       }
       function triggerConfetti() {
         confetti({

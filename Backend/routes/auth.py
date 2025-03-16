@@ -13,7 +13,7 @@ import re
 auth = Blueprint('auth', __name__)
 
 def validate_password(password):
-    """Ensure password meets security requirements."""
+    """Ensure the raw password meets security requirements."""
     if len(password) < 8:
         return False
     if not re.search(r"[A-Z]", password):
@@ -40,7 +40,7 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        # Validate password strength before hashing
+        # Validate raw password before hashing
         if not validate_password(password):
             flash('Password must be at least 8 characters and include uppercase, lowercase, and a number.', 'error')
             return redirect(url_for('auth.register'))
@@ -119,7 +119,7 @@ def settings():
                 return redirect(url_for('auth.settings'))
             current_user.password_hash = generate_password_hash(new_password, method='pbkdf2:sha256')
 
-        # Update profile photo only if a file is selected
+        # Update profile photo if a file is selected
         file = request.files.get('photo')
         if file and file.filename != '':
             if allowed_file(file.filename):
@@ -129,7 +129,7 @@ def settings():
                 filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
 
-                # Remove old profile photo if not default
+                # Remove old profile photo if it is not the default
                 if current_user.profile_photo != 'default_avatar.png':
                     old_path = os.path.join(current_app.config['UPLOAD_FOLDER'], current_user.profile_photo)
                     if os.path.exists(old_path):
