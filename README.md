@@ -61,7 +61,7 @@ The app will be available at **http://127.0.0.1:5001/** 🚀
 * Profile photo uploads are validated against allowed file types.
 
 ## 👥 Collaborators
-* **@sadatnazarli** (Backend & Project Lead)
+* **@dvecy** (Backend & Project Lead)
 * **@Yunis003** (Frontend Developer & UI/UX)
 
 ## ⭐ Contributing
